@@ -12,6 +12,8 @@ namespace KarmelCatalys
 {
     class Program
     {
+        public static int Width, Height;
+
         #region QuickEditModeDisable
         private static class NativeFunctions
         {
@@ -105,6 +107,14 @@ namespace KarmelCatalys
             #region PrepareKarmelVoids
             Workspace.Karmel.Awake();
             Workspace.Karmel.Start();
+            var lateUpdate = Task.Run(async () =>
+            {
+                for (; ; )
+                {
+                    await Task.Delay(1000);
+                    Workspace.Karmel.LateUpdate();
+                }
+            });
             var fixedUpdate = Task.Run(async () =>
             {
                 for (; ; )
@@ -177,7 +187,7 @@ namespace KarmelCatalysEngine
 {
     public class Map
     {
-        public MapObject[] objs;
+        public MapObject[][] objs;
         public Vec2Int Position { set; get; }
         
         public void LoadFromFile(string path)
@@ -186,28 +196,24 @@ namespace KarmelCatalysEngine
 
             using (var fs = new FileStream(path, FileMode.Open))
             {
-                objs = MessagePackSerializer.Deserialize<MapObject[]>(fs, lz4Options);
+                objs = MessagePackSerializer.Deserialize<MapObject[][]>(fs, lz4Options);
             }
             
         }
 
-        public void RenderMap(bool renderAndModify)
+        private string renderer_renderedMap;
+        public void RenderMap()
         {
-            Console.SetCursorPosition(0, 0);
-            foreach (MapObject obj in objs)
+            for (int i = 0; i < 26; i++)
             {
-                if (!renderAndModify)
+                for (int j = 0; j < 25; i++)
                 {
-                    Console.SetCursorPosition(obj.x - Position.X, obj.y - Position.Y);
+                    var mapObj = objs[i - Position.X][j - Position.Y];
+                    renderer_renderedMap += mapObj.character.Pastel(mapObj.color).PastelBg(mapObj.bgcolor);
                 }
-                else
-                {
-                    obj.x = Console.CursorLeft;
-                    obj.y = Console.CursorTop;
-                }
-                Console.Write(obj.character.Pastel(obj.color).PastelBg(obj.bgcolor));
-               
             }
+            Console.SetCursorPosition(0, 0);
+            Console.Write(renderer_renderedMap);
             Console.SetCursorPosition(51, 24);
         }
 
@@ -224,23 +230,7 @@ namespace KarmelCatalysEngine
 
         public MapObject GetMapObj(Vec2Int position)
         {
-            foreach (MapObject obj in objs)
-            {
-                if (obj.x == position.X)
-                {
-                    if (obj.y == position.Y)
-                    {
-                        return obj;
-                    }
-                }
-            }
-            var empty_map = new MapObject();
-            empty_map.x = 0;
-            empty_map.y = 0;
-            empty_map.color = null;
-            empty_map.bgcolor = null;
-            empty_map.character = null;
-            return empty_map;
+            return objs[position.X][position.Y];
         }
 
         public Vec2Int ScreenToMapPos(Vec2Int position)
@@ -257,7 +247,6 @@ namespace KarmelCatalysEngine
     [MessagePackObject(keyAsPropertyName: true)]
     public class MapObject
     {
-        public int x, y;
         public string character, color, bgcolor;
     }
 
