@@ -17,6 +17,7 @@ namespace Workspace
 
         public static void Awake() // Awake is the frist method that's called
         {
+            UI.DrawBackground("#B9B9EC");
             Console.SetCursorPosition(0,0);
             Console.WriteLine("Width/2 :: " + KarmelCatalys.Program.appWidth / 2);
             Console.WriteLine("Height :: " + KarmelCatalys.Program.appHeight);

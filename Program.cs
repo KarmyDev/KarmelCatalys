@@ -111,10 +111,10 @@ namespace KarmelCatalys
             {
                 for (; ; )
                 {
-                    fixedUpdateTime++;
-                    lateUpdateTime++;
                     await Task.Delay(1);
                     Workspace.Karmel.Update();
+                    fixedUpdateTime++;
+                    lateUpdateTime++;
                     if (fixedUpdateTime >= 100)
                     {
                         Workspace.Karmel.FixedUpdate();
@@ -123,7 +123,7 @@ namespace KarmelCatalys
                     if (lateUpdateTime >= 1000)
                     {
                         Workspace.Karmel.LateUpdate();
-                        fixedUpdateTime = 0;
+                        lateUpdateTime = 0;
                     }
                 }
             });
