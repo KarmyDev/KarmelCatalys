@@ -16,13 +16,14 @@ namespace Workspace
 
         public static void Awake() // Awake is the frist method that's called
         {
-
+            
         }
 
         public static void Start() // Start is called after Awake
         {
             playerPos = new Vec2Int(2, 2);
             RenderMap();
+            RenderPlayerPos();
         }
 
         public static void Update() // Update is called every 0.01 seconds
@@ -76,6 +77,8 @@ namespace Workspace
         {
             Console.SetCursorPosition(0, 0);
             Console.Write("                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n".PastelBg("#999999"));
+            // Console.SetCursorPosition(0, 0);
+            // UI.DrawUIBox(new Vec2Int(26-2, 25-2), "#44a832");
         }
     }
 }

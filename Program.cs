@@ -5,7 +5,7 @@ using System;
 // External
 using Karmel.Vectors;
 using Pastel;
-
+using System.IO;
 
 namespace KarmelCatalys
 {
@@ -83,10 +83,11 @@ namespace KarmelCatalys
 
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
-        #endregion 
+        #endregion
 
         static void Main(string[] args)
         {
+            
             #region PrepareWindow
             Console.SetWindowSize(52, 25);
             QuickEditMode(false);
@@ -153,17 +154,18 @@ namespace KarmelCatalysEngine
     /// </summary>
     public static class UI
     {
-        public static void DrawUIBox(string color, Vec2Int boxSize)
+        public static void DrawUIBox(Vec2Int boxSize, string color)
         {
             var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
+
             string firstPart = "╔";
             string midlePart = "║";
             string lastPart = "╚";
-            for (int i = 0; i < boxSize.X; i++)
+            for (int i = 0; i < boxSize.X + 1; i++)
             {
-                firstPart += "═";
-                midlePart += " ";
-                lastPart += "═";
+                firstPart += "══";
+                midlePart += "  ";
+                lastPart += "══";
             }
             firstPart += "╗";
             midlePart += "║";
@@ -174,7 +176,7 @@ namespace KarmelCatalysEngine
             for (int i = 0; i < boxSize.Y; i++)
             {
                 cursor.Y += 1;
-                Console.SetCursorPosition(cursor.X, cursor.Y);
+                Console.SetCursorPosition( cursor.X , cursor.Y);
                 Console.Write(midlePart.Pastel(color));
             }
             Console.SetCursorPosition(cursor.X, cursor.Y + 1);
