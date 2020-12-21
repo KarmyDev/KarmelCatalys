@@ -133,10 +133,73 @@ namespace KarmelCatalys
         public static ConsoleKey pressedKey;
 
     }
+
+    namespace FUNCTIONS
+    {
+        public static class UIDRAWER
+        {
+            public static void BOXDRAWER_DRAW(Vec2Int boxSize, string color, string bgcolor)
+            {
+                var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
+
+                string firstPart = "╔";
+                string midlePart = "║";
+                string lastPart = "╚";
+                for (int i = 0; i < boxSize.X + 1; i++)
+                {
+                    firstPart += "══";
+                    lastPart += "══";
+                }
+                firstPart += "╗";
+                lastPart += "╝";
+
+                Console.Write(firstPart.Pastel(color).PastelBg(bgcolor));
+
+                for (int i = 0; i < boxSize.Y; i++)
+                {
+                    cursor.Y += 1;
+                    Console.SetCursorPosition(cursor.X, cursor.Y);
+                    Console.Write(midlePart.Pastel(color).PastelBg(bgcolor));
+                    Console.SetCursorPosition(cursor.X + 3 + boxSize.X * 2, cursor.Y);
+                    Console.Write(midlePart.Pastel(color).PastelBg(bgcolor));
+                }
+                Console.SetCursorPosition(cursor.X, cursor.Y + 1);
+                Console.Write(lastPart.Pastel(color).PastelBg(bgcolor));
+            }
+        }
+
+        [System.Serializable]
+        public class MAPOBJECT
+        {
+            public Vec2Int position;
+            public string character, color, bgcolor;
+        }
+    }
+
 }
 
 namespace KarmelCatalysEngine
 {
+    public class Map
+    {
+        public KarmelCatalys.FUNCTIONS.MAPOBJECT[] objs;
+        public Vec2Int Position { set; get; }
+        
+        public void LoadFromFile(string path)
+        { 
+           
+        }
+
+        public Vec2Int ScreenToMapPos(Vec2Int position)
+        {
+            return new Vec2Int(position.X + Position.X, position.Y + Position.Y);
+        }
+
+        public void SetPosition(Vec2Int position)
+        {
+            Position = position;
+        }
+    }
     public static class Input
     {
         public static bool KeyDown(ConsoleKey key)
@@ -148,39 +211,26 @@ namespace KarmelCatalysEngine
             }
             return false;
         }
+
+        public static bool AnyKey(out ConsoleKey key)
+        {
+            key = KarmelCatalys.Program.pressedKey;
+            return KarmelCatalys.Program.pressedKey != ConsoleKey.NoName;
+        }
     }
-    /// <summary>
-    /// UI class for drawing UI in the console.
-    /// </summary>
     public static class UI
     {
+        public static void DrawUIBox(Vec2Int boxSize)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, "#cccccc", "#0c0c0c");
+        }
         public static void DrawUIBox(Vec2Int boxSize, string color)
         {
-            var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
-
-            string firstPart = "╔";
-            string midlePart = "║";
-            string lastPart = "╚";
-            for (int i = 0; i < boxSize.X + 1; i++)
-            {
-                firstPart += "══";
-                midlePart += "  ";
-                lastPart += "══";
-            }
-            firstPart += "╗";
-            midlePart += "║";
-            lastPart += "╝";
-
-            Console.Write(firstPart.Pastel(color));
-
-            for (int i = 0; i < boxSize.Y; i++)
-            {
-                cursor.Y += 1;
-                Console.SetCursorPosition( cursor.X , cursor.Y);
-                Console.Write(midlePart.Pastel(color));
-            }
-            Console.SetCursorPosition(cursor.X, cursor.Y + 1);
-            Console.Write(lastPart.Pastel(color));
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, "#0c0c0c");
+        }
+        public static void DrawUIBox(Vec2Int boxSize, string color, string bgcolor)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, bgcolor);
         }
     }
 }

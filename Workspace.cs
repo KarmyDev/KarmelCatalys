@@ -16,7 +16,8 @@ namespace Workspace
 
         public static void Awake() // Awake is the frist method that's called
         {
-            
+            var map01 = new Map();
+            map01.LoadFromFile(@"C:\Karmel Documents\Maps\map01.kcm");
         }
 
         public static void Start() // Start is called after Awake
@@ -58,7 +59,7 @@ namespace Workspace
 
         public static void FixedUpdate() // FixedUpdate is called every 0.1 seconds
         {
-
+            
             
         }
 
@@ -69,16 +70,20 @@ namespace Workspace
         public static void RenderPlayerPos()
         {
             Console.SetCursorPosition(playerPos.X, playerPos.Y);
-            Console.Write("██".Pastel("#fcba03"));
+            Console.Write("██".Pastel("#fcba03").PastelBg("#0c0c55"));
             Console.SetCursorPosition(51, 24);
         }
 
         public static void RenderMap()
         {
             Console.SetCursorPosition(0, 0);
-            Console.Write("                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n".PastelBg("#999999"));
-            // Console.SetCursorPosition(0, 0);
-            // UI.DrawUIBox(new Vec2Int(26-2, 25-2), "#44a832");
+            Console.Write("                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n"
+                .PastelBg("#0c0c55"));
+            
+            Console.SetCursorPosition(0, 0);
+            UI.DrawUIBox(new Vec2Int(26 - 2, 25 - 2), "#44a832", "#0c0c55");
+            Console.SetCursorPosition(4, 2);
+            UI.DrawUIBox(new Vec2Int(26 - 6, 25 - 6), "#990544", "#0c0c55");
         }
     }
 }
