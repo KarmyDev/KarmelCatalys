@@ -12,7 +12,7 @@ namespace KarmelCatalys
 {
     class Program
     {
-        public static int Width, Height;
+        public static int appWidth = 52, appHeight = 25;
 
         #region QuickEditModeDisable
         private static class NativeFunctions
@@ -92,9 +92,9 @@ namespace KarmelCatalys
         {
             
             #region PrepareWindow
-            Console.SetWindowSize(52, 25);
+            Console.SetWindowSize(appWidth, appHeight);
             QuickEditMode(false);
-            Console.SetBufferSize(52, 25);
+            Console.SetBufferSize(appWidth, appHeight);
 
 
             // Now disable resizing
@@ -107,28 +107,24 @@ namespace KarmelCatalys
             #region PrepareKarmelVoids
             Workspace.Karmel.Awake();
             Workspace.Karmel.Start();
-            var lateUpdate = Task.Run(async () =>
-            {
-                for (; ; )
-                {
-                    await Task.Delay(1000);
-                    Workspace.Karmel.LateUpdate();
-                }
-            });
-            var fixedUpdate = Task.Run(async () =>
-            {
-                for (; ; )
-                {
-                    await Task.Delay(100);
-                    Workspace.Karmel.FixedUpdate();
-                }
-            });
             var normalUpdate = Task.Run(async () =>
             {
                 for (; ; )
                 {
-                    await Task.Delay(10);
+                    fixedUpdateTime++;
+                    lateUpdateTime++;
+                    await Task.Delay(1);
                     Workspace.Karmel.Update();
+                    if (fixedUpdateTime >= 100)
+                    {
+                        Workspace.Karmel.FixedUpdate();
+                        fixedUpdateTime = 0;
+                    }
+                    if (lateUpdateTime >= 1000)
+                    {
+                        Workspace.Karmel.LateUpdate();
+                        fixedUpdateTime = 0;
+                    }
                 }
             });
             #endregion
@@ -140,6 +136,8 @@ namespace KarmelCatalys
             }
             Environment.Exit(0);
         }
+        private static int fixedUpdateTime = 0, lateUpdateTime = 0;
+
         public static bool dontCloseApp = true;
         public static ConsoleKey pressedKey;
 
@@ -204,9 +202,9 @@ namespace KarmelCatalysEngine
         private string renderer_renderedMap;
         public void RenderMap()
         {
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < KarmelCatalys.Program.appWidth / 2; i++)
             {
-                for (int j = 0; j < 25; i++)
+                for (int j = 0; j < KarmelCatalys.Program.appHeight; i++)
                 {
                     var mapObj = objs[i - Position.X][j - Position.Y];
                     renderer_renderedMap += mapObj.character.Pastel(mapObj.color).PastelBg(mapObj.bgcolor);
@@ -282,12 +280,20 @@ namespace KarmelCatalysEngine
         {
             KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, bgcolor);
         }
-
+        
+        private static string drawer_background_text; // MOVE THIS THINGS TO ANOTHER CLASS FOR TEMP VARIABLESS
         public static void DrawBackground(string color)
         {
+            
+            for (int i = 0; i < KarmelCatalys.Program.appWidth / 2; i++)
+            {
+                for (int j = 0; j < KarmelCatalys.Program.appHeight; j++)
+                {
+                    drawer_background_text += "  ";
+                }
+            }
             Console.SetCursorPosition(0, 0);
-            Console.Write("                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    "
-                .PastelBg(color));
+            Console.Write(drawer_background_text.PastelBg(color));
         }
     }
 }
