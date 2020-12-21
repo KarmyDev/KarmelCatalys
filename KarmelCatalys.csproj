@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Pastel" Version="2.1.0" />
   </ItemGroup>
 

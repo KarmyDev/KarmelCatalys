@@ -13,17 +13,40 @@ namespace Workspace
 {
     public static class Karmel
     {
+        public static Map map01;
 
         public static void Awake() // Awake is the frist method that's called
         {
-            var map01 = new Map();
-            map01.LoadFromFile(@"C:\Karmel Documents\Maps\map01.kcm");
+            var mapObj = new MapObject();
+
+            /*
+            mapObj.character = "[]";
+            mapObj.color = "#c521db";
+            mapObj.bgcolor = "#661e70";
+            mapObj.x = 0;
+            mapObj.y = 0;
+            */
+            map01 = new Map();
+            map01.SetPosition(new Vec2Int(0, 0));
+            /*
+            map01.objs = new MapObject[650];
+            for (int i = 0; i < 650; i++)
+            {
+                map01.objs[i] = mapObj;
+            }
+            map01.RenderMap(true);
+            map01.SaveToFile(@"C:\SpecialFolder\MAPS\map01.kcm");
+            */
+            map01.LoadFromFile(@"C:\SpecialFolder\MAPS\map01.kcm");
+            map01.RenderMap(false);
+            
+            
         }
 
         public static void Start() // Start is called after Awake
         {
             playerPos = new Vec2Int(2, 2);
-            RenderMap();
+            // RenderMap();
             RenderPlayerPos();
         }
 
@@ -76,9 +99,7 @@ namespace Workspace
 
         public static void RenderMap()
         {
-            Console.SetCursorPosition(0, 0);
-            Console.Write("                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n"
-                .PastelBg("#0c0c55"));
+            UI.DrawBackground("#0c0c55");
             
             Console.SetCursorPosition(0, 0);
             UI.DrawUIBox(new Vec2Int(26 - 2, 25 - 2), "#44a832", "#0c0c55");

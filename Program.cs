@@ -6,6 +6,7 @@ using System;
 using Karmel.Vectors;
 using Pastel;
 using System.IO;
+using MessagePack;
 
 namespace KarmelCatalys
 {
@@ -168,12 +169,6 @@ namespace KarmelCatalys
             }
         }
 
-        [System.Serializable]
-        public class MAPOBJECT
-        {
-            public Vec2Int position;
-            public string character, color, bgcolor;
-        }
     }
 
 }
@@ -182,12 +177,70 @@ namespace KarmelCatalysEngine
 {
     public class Map
     {
-        public KarmelCatalys.FUNCTIONS.MAPOBJECT[] objs;
+        public MapObject[] objs;
         public Vec2Int Position { set; get; }
         
         public void LoadFromFile(string path)
-        { 
-           
+        {
+            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+
+            using (var fs = new FileStream(path, FileMode.Open))
+            {
+                objs = MessagePackSerializer.Deserialize<MapObject[]>(fs, lz4Options);
+            }
+            
+        }
+
+        public void RenderMap(bool renderAndModify)
+        {
+            Console.SetCursorPosition(0, 0);
+            foreach (MapObject obj in objs)
+            {
+                if (!renderAndModify)
+                {
+                    Console.SetCursorPosition(obj.x - Position.X, obj.y - Position.Y);
+                }
+                else
+                {
+                    obj.x = Console.CursorLeft;
+                    obj.y = Console.CursorTop;
+                }
+                Console.Write(obj.character.Pastel(obj.color).PastelBg(obj.bgcolor));
+               
+            }
+            Console.SetCursorPosition(51, 24);
+        }
+
+        public void SaveToFile(string path)
+        {
+            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+            byte[] byteObjs = MessagePackSerializer.Serialize(objs, lz4Options);
+
+            using (var fs = new FileStream(path, FileMode.Append))
+            {
+                fs.Write(byteObjs);
+            }
+        }
+
+        public MapObject GetMapObj(Vec2Int position)
+        {
+            foreach (MapObject obj in objs)
+            {
+                if (obj.x == position.X)
+                {
+                    if (obj.y == position.Y)
+                    {
+                        return obj;
+                    }
+                }
+            }
+            var empty_map = new MapObject();
+            empty_map.x = 0;
+            empty_map.y = 0;
+            empty_map.color = null;
+            empty_map.bgcolor = null;
+            empty_map.character = null;
+            return empty_map;
         }
 
         public Vec2Int ScreenToMapPos(Vec2Int position)
@@ -200,6 +253,14 @@ namespace KarmelCatalysEngine
             Position = position;
         }
     }
+
+    [MessagePackObject(keyAsPropertyName: true)]
+    public class MapObject
+    {
+        public int x, y;
+        public string character, color, bgcolor;
+    }
+
     public static class Input
     {
         public static bool KeyDown(ConsoleKey key)
@@ -231,6 +292,13 @@ namespace KarmelCatalysEngine
         public static void DrawUIBox(Vec2Int boxSize, string color, string bgcolor)
         {
             KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, bgcolor);
+        }
+
+        public static void DrawBackground(string color)
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.Write("                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    \n                                                    "
+                .PastelBg(color));
         }
     }
 }
