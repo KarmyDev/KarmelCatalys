@@ -90,13 +90,14 @@ namespace KarmelCatalys
 
         static void Main(string[] args)
         {
-            
+
             #region PrepareWindow
-            Console.SetWindowSize(appWidth, appHeight);
             QuickEditMode(false);
+#pragma warning disable CA1416 // Weryfikuj zgodność z platformą
+            Console.SetWindowSize(appWidth, appHeight);
             Console.SetBufferSize(appWidth, appHeight);
-
-
+#pragma warning restore CA1416 // Weryfikuj zgodność z platformą
+            
             // Now disable resizing
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
