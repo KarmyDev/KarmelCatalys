@@ -97,11 +97,11 @@ namespace KarmelCatalys
             Console.SetBufferSize(appWidth, appHeight);
 
 
-            /* Now disable resizing
+            // Now disable resizing
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
-            */
+            
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
             #endregion
 
