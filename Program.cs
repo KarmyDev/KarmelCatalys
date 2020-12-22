@@ -186,7 +186,7 @@ namespace KarmelCatalysEngine
 {
     public class Map
     {
-        public MapObject[][] objs;
+        public MapObject[,] objs;
         public Vec2Int Position { set; get; }
         
         public void LoadFromFile(string path)
@@ -195,7 +195,7 @@ namespace KarmelCatalysEngine
 
             using (var fs = new FileStream(path, FileMode.Open))
             {
-                objs = MessagePackSerializer.Deserialize<MapObject[][]>(fs, lz4Options);
+                objs = MessagePackSerializer.Deserialize<MapObject[,]>(fs, lz4Options);
             }
             
         }
@@ -207,7 +207,7 @@ namespace KarmelCatalysEngine
             {
                 for (int j = 0; j < KarmelCatalys.Program.appHeight; i++)
                 {
-                    var mapObj = objs[i - Position.X][j - Position.Y];
+                    var mapObj = objs[i - Position.X, j - Position.Y];
                     renderer_renderedMap += mapObj.character.Pastel(mapObj.color).PastelBg(mapObj.bgcolor);
                 }
             }
@@ -229,7 +229,7 @@ namespace KarmelCatalysEngine
 
         public MapObject GetMapObj(Vec2Int position)
         {
-            return objs[position.X][position.Y];
+            return objs[position.X, position.Y];
         }
 
         public Vec2Int ScreenToMapPos(Vec2Int position)
