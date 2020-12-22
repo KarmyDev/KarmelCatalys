@@ -97,10 +97,11 @@ namespace KarmelCatalys
             Console.SetBufferSize(appWidth, appHeight);
 
 
-            // Now disable resizing
+            /* Now disable resizing
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
+            */
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
             #endregion
 
@@ -109,21 +110,21 @@ namespace KarmelCatalys
             Workspace.Karmel.Start();
             var normalUpdate = Task.Run(async () =>
             {
-                for (; ; )
+                while (true)
                 {
+                    slowUpdateTime++;
+                    lazyUpdateTime++;
                     await Task.Delay(1);
-                    Workspace.Karmel.Update();
-                    fixedUpdateTime++;
-                    lateUpdateTime++;
-                    if (fixedUpdateTime >= 100)
+                    var update = Task.Run(Workspace.Karmel.Update);
+                    if (slowUpdateTime >= 10)
                     {
-                        Workspace.Karmel.FixedUpdate();
-                        fixedUpdateTime = 0;
+                        var slowUpdate = Task.Run(Workspace.Karmel.SlowUpdate);
+                        slowUpdateTime = 0;
                     }
-                    if (lateUpdateTime >= 1000)
+                    if (lazyUpdateTime >= 100)
                     {
-                        Workspace.Karmel.LateUpdate();
-                        lateUpdateTime = 0;
+                        var lazyUpdate = Task.Run(Workspace.Karmel.LazyUpdate);
+                        lazyUpdateTime = 0;
                     }
                 }
             });
@@ -136,7 +137,7 @@ namespace KarmelCatalys
             }
             Environment.Exit(0);
         }
-        private static int fixedUpdateTime = 0, lateUpdateTime = 0;
+        private static int slowUpdateTime = 0, lazyUpdateTime = 0;
 
         public static bool dontCloseApp = true;
         public static ConsoleKey pressedKey;

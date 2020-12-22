@@ -17,10 +17,10 @@ namespace Workspace
 
         public static void Awake() // Awake is the frist method that's called
         {
+            Console.SetCursorPosition(0, 0);
             UI.DrawBackground("#B9B9EC");
-            Console.SetCursorPosition(0,0);
-            Console.WriteLine("Width/2 :: " + KarmelCatalys.Program.appWidth / 2);
-            Console.WriteLine("Height :: " + KarmelCatalys.Program.appHeight);
+            Console.SetCursorPosition(0, 0);
+            UI.DrawUIBox(new Vec2Int(8, 3));
         }
 
         public static void Start() // Start is called after Awake
@@ -28,8 +28,23 @@ namespace Workspace
             playerPos = new Vec2Int(0, 0);
         }
 
+        private static bool mUpdate, mSlow, mLazy;
+        private static int iUpdate, iSlow, iLazy;
+
         public static void Update() // Update is called every 0.01 seconds
         {
+            iUpdate++;
+            if (iUpdate >= 9) iUpdate = 0;
+
+            Console.SetCursorPosition(1, 1);
+            Console.Write("Update     :: " + iUpdate + "   ");
+            Console.SetCursorPosition(1, 2);
+            Console.Write("SlowUpdate :: " + iSlow + "   ");
+            Console.SetCursorPosition(1, 3);
+            Console.Write("LazyUpdate :: " + iLazy + "   ");
+            
+            Console.SetCursorPosition(KarmelCatalys.Program.appWidth -1 , KarmelCatalys.Program.appHeight - 1);
+
             if (Input.KeyDown(ConsoleKey.W))
             {
                 playerPos.Y--;
@@ -66,15 +81,16 @@ namespace Workspace
 
         }
 
-        public static void FixedUpdate() // FixedUpdate is called every 0.1 seconds
+        public static void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds
         {
-            
-            
+            iSlow++;
+            if (iSlow >= 9) iSlow = 0;
         }
 
-        public static void LateUpdate() // LateUpdate is called every 1 second
+        public static void LazyUpdate() // LazyUpdate is called every ~ 1 second
         {
-            
+            iLazy++;
+            if (iLazy >= 9) iLazy = 0;
         }
 
         // ### Workspace ###
