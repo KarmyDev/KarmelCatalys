@@ -1,11 +1,15 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.IO;
+using System.Media;
 using System;
+
+// Experimental
+
 
 // External
 using Karmel.Vectors;
 using Pastel;
-using System.IO;
 using MessagePack;
 
 namespace KarmelCatalys
@@ -178,13 +182,91 @@ namespace KarmelCatalys
                 Console.Write(lastPart.Pastel(color).PastelBg(bgcolor));
             }
         }
-
     }
 
 }
 
 namespace KarmelCatalysEngine
 {
+
+    public class Audio
+    {
+        public class Song
+        {
+            byte[] songData = null;
+
+            public bool IsPlaying { get; private set; }
+            public bool IsLooping { get; set; }
+
+            public Song() { songData = null; }
+
+            public Song(string path)
+            {
+                if (File.Exists(path))
+                {
+                    songData = File.ReadAllBytes(path);
+                }
+            }
+
+            public void Play(bool loop)
+            {
+                ActualPlayer(loop);
+
+            }
+            public void Play()
+            {
+                ActualPlayer(false);
+            }
+
+            private void ActualPlayer(bool loop)
+            {
+                if (songData != null)
+                {
+                    
+                    IsLooping = loop;
+                    IsPlaying = true;
+#pragma warning disable CA1416 // Weryfikuj zgodność z platformą
+                    var thisTask = Task.Factory.StartNew(() =>
+                    {
+
+                        byte[] privateSongData = songData;
+                        using (var ms = new MemoryStream(privateSongData))
+                        {
+                            var player = new SoundPlayer(ms);
+
+                            player.PlaySync();
+                            if (IsLooping)
+                            {
+                                ActualPlayer(IsLooping);
+                            }
+                            else
+                            {
+                                IsPlaying = false;
+                            }
+                        }
+
+                    }
+                    );
+#pragma warning restore CA1416 // Weryfikuj zgodność z platformą
+
+                }
+            }
+
+            public void LoadSong(string path)
+            {
+                if (File.Exists(path))
+                {
+                    songData = File.ReadAllBytes(path);
+                }
+            }
+
+            public void ClearSong()
+            {
+                songData = null;
+            }
+        }
+    }
+
     public class Map
     {
         public MapObject[,] objs;
@@ -265,7 +347,22 @@ namespace KarmelCatalysEngine
         public static bool AnyKey(out ConsoleKey key)
         {
             key = KarmelCatalys.Program.pressedKey;
-            return KarmelCatalys.Program.pressedKey != ConsoleKey.NoName;
+            if (key != ConsoleKey.NoName)
+            {
+                KarmelCatalys.Program.pressedKey = ConsoleKey.NoName;
+                return true;
+            }
+            key = ConsoleKey.NoName;
+            return false;
+        }
+        public static bool AnyKey()
+        { 
+            if (KarmelCatalys.Program.pressedKey != ConsoleKey.NoName)
+            {
+                KarmelCatalys.Program.pressedKey = ConsoleKey.NoName;
+                return true;
+            }
+            return false;
         }
     }
     public static class UI

@@ -9,8 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bass.Net" Version="1.0.0" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Pastel" Version="2.1.0" />
+    <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
