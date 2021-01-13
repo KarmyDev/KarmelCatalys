@@ -16,7 +16,7 @@ namespace Workspace
 
         public static void Awake() // Awake is the frist method that's called
         {
-            
+            UI.DrawUIBox(new Vec2Int(5,3),"#ABB634");
         }
 
         public static void Start() // Start is called after Awake
