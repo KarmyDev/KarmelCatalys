@@ -18,13 +18,9 @@ namespace Workspace
 
         public void Awake() // Awake is the frist method that's called
         {
-            UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, KarmelCatalys.Program.screenHeight),"#26FF00");
-            Console.SetCursorPosition(1, 1);
-            Console.Write("This is example of an text renderer");
-            Console.SetCursorPosition(2, 2);
-            UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth / 2, KarmelCatalys.Program.screenHeight / 2), "#FFF400");
-            Console.SetCursorPosition(2, 2);
-            Console.Write("░░");
+            // UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, KarmelCatalys.Program.screenHeight),"#26FF00");
+            Console.SetCursorPosition(0, 0);
+            UI.DrawBackground("#40C0DE");
 
             
         }
@@ -40,7 +36,9 @@ namespace Workspace
 
         public void Update() // Update is called every 0.01 seconds
         {
-            
+            Console.SetCursorPosition(0, 0);
+            Console.Write(Paths.MainDirectory);
+            Console.SetCursorPosition(0, 0);
         }
 
         public void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds

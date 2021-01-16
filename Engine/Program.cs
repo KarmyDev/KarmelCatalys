@@ -14,6 +14,7 @@ using Un4seen.Bass;
 using Karmel.Vectors;
 using Pastel;
 using MessagePack;
+using System.Diagnostics;
 
 namespace KarmelCatalys
 {
@@ -350,6 +351,7 @@ namespace KarmelCatalysEngine
             mapObj.character = "  ";
             mapObj.color = "#cccccc";
             mapObj.bgcolor = "#0c0c0c";
+            mapObj.eventData = "#000000";
             return mapObj;
         }
 
@@ -381,7 +383,7 @@ namespace KarmelCatalysEngine
     [MessagePackObject(keyAsPropertyName: true)]
     public class MapObject
     {
-        public string character, color, bgcolor;
+        public string character, color, bgcolor, eventData;
     }
 
     public static class Input
@@ -446,5 +448,10 @@ namespace KarmelCatalysEngine
             Console.SetCursorPosition(0, 0);
             Console.Write(drawer_background_text.PastelBg(color));
         }
+    }
+
+    public static class Paths
+    {
+        public static string MainDirectory { get; } = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName);
     }
 }
