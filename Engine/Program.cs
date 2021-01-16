@@ -4,6 +4,9 @@ using System.IO;
 using System.Media;
 using System;
 
+//Required
+using Un4seen.Bass;
+
 // Experimental
 
 
@@ -17,6 +20,7 @@ namespace KarmelCatalys
     class Program
     {
         public static int appWidth = 52, appHeight = 25;
+        public static int screenWidth, screenHeight;
 
         #region QuickEditModeDisable
         private static class NativeFunctions
@@ -92,6 +96,8 @@ namespace KarmelCatalys
         private static extern IntPtr GetConsoleWindow();
         #endregion
 
+        public static Workspace.Karmel karmelWorkspace;
+
         static void Main(string[] args)
         {
 
@@ -110,9 +116,20 @@ namespace KarmelCatalys
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
             #endregion
 
+            #region Prepare Bass (Disabled)
+            // Bass.BASS_Init(-1, -1, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+            #endregion
+
+            #region Prepare Variables
+            screenWidth = appWidth / 2 - 1;
+            screenHeight = appHeight - 2;
+            #endregion
+
             #region PrepareKarmelVoids
-            Workspace.Karmel.Awake();
-            Workspace.Karmel.Start();
+            karmelWorkspace = new Workspace.Karmel();
+
+            karmelWorkspace.Awake();
+            karmelWorkspace.Start();
             var normalUpdate = Task.Run(async () =>
             {
                 while (true)
@@ -120,15 +137,15 @@ namespace KarmelCatalys
                     slowUpdateTime++;
                     lazyUpdateTime++;
                     await Task.Delay(1);
-                    var update = Task.Run(Workspace.Karmel.Update);
+                    var update = Task.Run(karmelWorkspace.Update);
                     if (slowUpdateTime >= 10)
                     {
-                        var slowUpdate = Task.Run(Workspace.Karmel.SlowUpdate);
+                        var slowUpdate = Task.Run(karmelWorkspace.SlowUpdate);
                         slowUpdateTime = 0;
                     }
                     if (lazyUpdateTime >= 100)
                     {
-                        var lazyUpdate = Task.Run(Workspace.Karmel.LazyUpdate);
+                        var lazyUpdate = Task.Run(karmelWorkspace.LazyUpdate);
                         lazyUpdateTime = 0;
                     }
                 }
@@ -157,16 +174,17 @@ namespace KarmelCatalys
             {
                 var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
 
-                string firstPart = "╔";
-                string midlePart = "║";
-                string lastPart = "╚";
-                for (int i = 0; i < boxSize.X + 1; i++)
+                string firstPart = "╔═";
+                string midlePartL = "║ ";
+                string midlePartR = " ║";
+                string lastPart = "╚═";
+                for (int i = 0; i < boxSize.X - 1 ; i++)
                 {
                     firstPart += "══";
                     lastPart += "══";
                 }
-                firstPart += "╗";
-                lastPart += "╝";
+                firstPart += "═╗";
+                lastPart += "═╝";
 
                 Console.Write(firstPart.Pastel(color).PastelBg(bgcolor));
 
@@ -174,9 +192,9 @@ namespace KarmelCatalys
                 {
                     cursor.Y += 1;
                     Console.SetCursorPosition(cursor.X, cursor.Y);
-                    Console.Write(midlePart.Pastel(color).PastelBg(bgcolor));
-                    Console.SetCursorPosition(cursor.X + 3 + boxSize.X * 2, cursor.Y);
-                    Console.Write(midlePart.Pastel(color).PastelBg(bgcolor));
+                    Console.Write(midlePartL.Pastel(color).PastelBg(bgcolor));
+                    Console.SetCursorPosition(cursor.X + boxSize.X * 2, cursor.Y);
+                    Console.Write(midlePartR.Pastel(color).PastelBg(bgcolor));
                 }
                 Console.SetCursorPosition(cursor.X, cursor.Y + 1);
                 Console.Write(lastPart.Pastel(color).PastelBg(bgcolor));
@@ -188,8 +206,18 @@ namespace KarmelCatalys
 
 namespace KarmelCatalysEngine
 {
+    /* THIS IS BASS CLASS - ITS CURRENTLY DISABLED
+    public static class Audio
+    {
 
-    public class Audio
+        public static void PlayData(byte[] data)
+        {
+            Bass.BASS_ChannelPlay(Bass.BASS_StreamPutData(Bass.BASS_StreamCreatePush(0, 0, BASSFlag.BASS_STREAM_AUTOFREE, IntPtr.Zero), data, 0), false);
+        }
+    }
+    */
+
+    public class Old_Audio
     {
         public class Song
         {
@@ -222,7 +250,7 @@ namespace KarmelCatalysEngine
             {
                 if (songData != null)
                 {
-                    
+
                     IsLooping = loop;
                     IsPlaying = true;
 #pragma warning disable CA1416 // Weryfikuj zgodność z platformą
@@ -230,19 +258,17 @@ namespace KarmelCatalysEngine
                     {
 
                         byte[] privateSongData = songData;
-                        using (var ms = new MemoryStream(privateSongData))
-                        {
-                            var player = new SoundPlayer(ms);
+                        using var ms = new MemoryStream(privateSongData);
+                        var player = new SoundPlayer(ms);
 
-                            player.PlaySync();
-                            if (IsLooping)
-                            {
-                                ActualPlayer(IsLooping);
-                            }
-                            else
-                            {
-                                IsPlaying = false;
-                            }
+                        player.PlaySync();
+                        if (IsLooping)
+                        {
+                            ActualPlayer(IsLooping);
+                        }
+                        else
+                        {
+                            IsPlaying = false;
                         }
 
                     }
@@ -270,33 +296,61 @@ namespace KarmelCatalysEngine
     public class Map
     {
         public MapObject[,] objs;
-        public Vec2Int Position { set; get; }
-        
+        public Vec2Int Position { set; get; } // Screen position, where currently screen is on the map
+
         public void LoadFromFile(string path)
         {
             var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
 
-            using (var fs = new FileStream(path, FileMode.Open))
-            {
-                objs = MessagePackSerializer.Deserialize<MapObject[,]>(fs, lz4Options);
-            }
-            
+            using var fs = new FileStream(path, FileMode.Open);
+            objs = MessagePackSerializer.Deserialize<MapObject[,]>(fs, lz4Options);
+
         }
 
         private string renderer_renderedMap;
+
+        public void RenderLastMap()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.Write(renderer_renderedMap);
+        }
         public void RenderMap()
         {
-            for (int i = 0; i < KarmelCatalys.Program.appWidth / 2; i++)
+            for (int i = Position.X; i < Position.X + KarmelCatalys.Program.appWidth / 2; i++)
             {
-                for (int j = 0; j < KarmelCatalys.Program.appHeight; i++)
+                for (int j = Position.Y; j < Position.Y + KarmelCatalys.Program.appHeight; i++)
                 {
-                    var mapObj = objs[i - Position.X, j - Position.Y];
+                    var mapObj = new MapObject();
+                    if (i >= 0 && i < objs.GetLength(0) && j >= 0 && j < objs.GetLength(1))
+                    {
+                        if (objs[i, j] != null)
+                        {
+                            mapObj = objs[i, j];
+                        }
+                        else
+                        {
+                            mapObj = GetDefaultMapObject();
+                        }
+                    }
+                    else
+                    {
+                        mapObj = GetDefaultMapObject();
+                    }
                     renderer_renderedMap += mapObj.character.Pastel(mapObj.color).PastelBg(mapObj.bgcolor);
                 }
             }
+
             Console.SetCursorPosition(0, 0);
             Console.Write(renderer_renderedMap);
-            Console.SetCursorPosition(51, 24);
+        }
+
+        private MapObject GetDefaultMapObject()
+        {
+            var mapObj = new MapObject();
+            mapObj.character = "  ";
+            mapObj.color = "#cccccc";
+            mapObj.bgcolor = "#0c0c0c";
+            return mapObj;
         }
 
         public void SaveToFile(string path)
@@ -304,20 +358,18 @@ namespace KarmelCatalysEngine
             var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
             byte[] byteObjs = MessagePackSerializer.Serialize(objs, lz4Options);
 
-            using (var fs = new FileStream(path, FileMode.Append))
-            {
-                fs.Write(byteObjs);
-            }
+            using var fs = new FileStream(path, FileMode.Append);
+            fs.Write(byteObjs);
         }
 
-        public MapObject GetMapObj(Vec2Int position)
+        public MapObject GetMapObject(Vec2Int position)
         {
             return objs[position.X, position.Y];
         }
 
         public Vec2Int ScreenToMapPos(Vec2Int position)
         {
-            return new Vec2Int(position.X + Position.X, position.Y + Position.Y);
+            return new Vec2Int(Position.X + position.X, Position.Y + position.Y);
         }
 
         public void SetPosition(Vec2Int position)
