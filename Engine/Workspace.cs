@@ -18,9 +18,10 @@ namespace Workspace
 
         public void Awake() // Awake is the frist method that's called
         {
+
             // UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, KarmelCatalys.Program.screenHeight),"#26FF00");
-            //Console.SetCursorPosition(0, 0);
-            UI.DrawBackground("#40C0DE");
+            Console.SetCursorPosition(0, 0);
+            UI.DrawBackground("#000000");
 
             map01 = new IDMap();
             map01.MapObjectData = new int[,] {
@@ -54,10 +55,10 @@ namespace Workspace
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
             };
             map01.TileList = new string[]
-            { "  ".PastelBg("#7D2D85"), "  ".PastelBg("#959595")  };
+            { " ", " ".PastelBg("#C816CB")  };
             map01.RenderMap();
-            KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("My personal error", false);
-            
+            //KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("My personal error", false);
+
         }
 
         public void Start() // Start is called after Awake
@@ -65,6 +66,9 @@ namespace Workspace
             // DONT TOUCH IT // Audio.PlayData(File.ReadAllBytes(@"C:\SpecialFolder\rmx.wav"));
             mySong = new Old_Audio.Song(@"C:\SpecialFolder\rmx.wav");
             yourSong = new Old_Audio.Song(@"C:\SpecialFolder\rmx.wav");
+            posX = -10;
+            posY = -10;
+            RenderFrame();
         }
         private IDMap map01;
         private Old_Audio.Song mySong, yourSong;
@@ -72,38 +76,44 @@ namespace Workspace
         private int posX, posY;
         public void Update() // Update is called every 0.01 seconds
         {
+            
+
+        }
+
+        public void RenderFrame()
+        {
+            map01.Position = new Vec2Int(posX, posY);
+            Console.SetCursorPosition(0, 0);
+            map01.RenderMap();
+            Console.SetCursorPosition(0, 0);
+            UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#16FF00", true);
+            Console.SetCursorPosition(2, 2);
+            Console.Write("            Lives: 4   |   Keys: 0");
+            Console.SetCursorPosition(0, 0);
+        }
+
+        public void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds
+        {
             var key = new ConsoleKey();
             if (Input.KeyDown(ConsoleKey.RightArrow))
             {
                 posX++;
-                map01.Position = new Vec2Int(posX, posY);
-                Console.SetCursorPosition(0, 0);
-                map01.RenderMap();
-                Console.SetCursorPosition(0, 0);
+                RenderFrame();
             }
             if (Input.KeyDown(ConsoleKey.LeftArrow))
             {
                 posX--;
-                map01.Position = new Vec2Int(posX, posY);
-                Console.SetCursorPosition(0, 0);
-                map01.RenderMap();
-                Console.SetCursorPosition(0, 0);
+                RenderFrame();
             }
             if (Input.KeyDown(ConsoleKey.UpArrow))
             {
                 posY--;
-                map01.Position = new Vec2Int(posX, posY);
-                Console.SetCursorPosition(0, 0);
-                map01.RenderMap();
-                Console.SetCursorPosition(0, 0);
+                RenderFrame();
             }
             if (Input.KeyDown(ConsoleKey.DownArrow))
             {
                 posY++;
-                map01.Position = new Vec2Int(posX, posY);
-                Console.SetCursorPosition(0, 0);
-                map01.RenderMap();
-                Console.SetCursorPosition(0, 0);
+                RenderFrame();
             }
 
             if (Input.KeyDown(ConsoleKey.Enter) && !consoleActive)
@@ -126,14 +136,8 @@ namespace Workspace
                 {
                     Console.Write(key.ToString().ToLower());
                 }
-                
+
             }
-
-        }
-
-        public void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds
-        {
-            
         }
 
         public void LazyUpdate() // LazyUpdate is called every ~ 1 second

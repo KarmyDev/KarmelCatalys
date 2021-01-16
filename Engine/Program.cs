@@ -20,7 +20,7 @@ namespace KarmelCatalys
 {
     class Program
     {
-        public static int appWidth = 52, appHeight = 25;
+        public static int appWidth = 52, appHeight = 52;
         public static int screenWidth, screenHeight;
 
         #region QuickEditModeDisable
@@ -97,6 +97,86 @@ namespace KarmelCatalys
         private static extern IntPtr GetConsoleWindow();
         #endregion
 
+        #region ChangeConsoleFont
+        private const int FixedWidthTrueType = 54;
+        private const int StandardOutputHandle = -11;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern bool SetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern bool GetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+
+
+        private static readonly IntPtr ConsoleOutputHandle = GetStdHandle(StandardOutputHandle);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct FontInfo
+        {
+            internal int cbSize;
+            internal int FontIndex;
+            internal short FontWidth;
+            public short FontSize;
+            public int FontFamily;
+            public int FontWeight;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            //[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.wc, SizeConst = 32)]
+            public string FontName;
+        }
+
+        public static FontInfo[] SetCurrentFont(string font, short fontSize = 0, short fontWidth = 0)
+        {
+            // Console.WriteLine("Set Current Font: " + font);
+
+            FontInfo before = new FontInfo
+            {
+                cbSize = Marshal.SizeOf<FontInfo>()
+            };
+
+
+            if (GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref before))
+            {
+
+                FontInfo set = new FontInfo
+                {
+                    cbSize = Marshal.SizeOf<FontInfo>(),
+                    FontIndex = 0,
+                    FontName = font,
+                    FontWeight = 400,
+                    FontSize = fontSize > 0 ? fontSize : before.FontSize,
+                    FontWidth = fontWidth > 0 ? fontWidth : before.FontWidth,
+                };
+
+                // Get some settings from current font.
+                if (!SetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref set))
+                {
+                    var ex = Marshal.GetLastWin32Error();
+                    Console.WriteLine("Set error " + ex);
+                    throw new System.ComponentModel.Win32Exception(ex);
+                }
+
+                FontInfo after = new FontInfo
+                {
+                    cbSize = Marshal.SizeOf<FontInfo>()
+                };
+                GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref after);
+
+                return new[] { before, set, after };
+            }
+            else
+            {
+                var er = Marshal.GetLastWin32Error();
+                Console.WriteLine("Get error " + er);
+                throw new System.ComponentModel.Win32Exception(er);
+            }
+        }
+        #endregion
+
         public static Workspace.Karmel karmelWorkspace;
 
         /// <summary>
@@ -119,6 +199,9 @@ namespace KarmelCatalys
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
             
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
+
+            SetCurrentFont("Terminal", 8, 8);
+
             #endregion
 
             #region Prepare Bass (Disabled)
@@ -126,8 +209,8 @@ namespace KarmelCatalys
             #endregion
 
             #region Prepare Variables
-            screenWidth = appWidth / 2 - 1;
-            screenHeight = appHeight - 2;
+            screenWidth = appWidth - 1;
+            screenHeight = appHeight - 1;
             #endregion
 
             #region PrepareKarmelVoids
@@ -179,19 +262,19 @@ namespace KarmelCatalys
             {
                 var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
 
-                string firstPart = "╔═";
-                string midlePartL = "║ ";
-                string midlePartR = " ║";
-                string lastPart = "╚═";
+                string firstPart = "╔";
+                string midlePartL = "║";
+                string midlePartR = "║";
+                string lastPart = "╚";
                 string fillPart = "";
                 for (int i = 0; i < boxSize.X - 1 ; i++)
                 {
-                    firstPart += "══";
-                    fillPart += "  ";
-                    lastPart += "══";
+                    firstPart += "═";
+                    fillPart += " ";
+                    lastPart += "═";
                 }
-                firstPart += "═╗";
-                lastPart += "═╝";
+                firstPart += "╗";
+                lastPart += "╝";
 
                 Console.Write(firstPart.Pastel(color).PastelBg(bgcolor));
                 if (!fill)
@@ -258,7 +341,7 @@ namespace KarmelCatalysEngine
 
         public void RenderMap()
         {
-            MapRender(new Vec2Int(KarmelCatalys.Program.appWidth / 2, KarmelCatalys.Program.appHeight - 1), TileList);
+            MapRender(new Vec2Int(KarmelCatalys.Program.appWidth, KarmelCatalys.Program.appHeight), TileList);
         }
 
         public void RenderMap(Vec2Int screenSizeToRender)
@@ -287,17 +370,17 @@ namespace KarmelCatalysEngine
                                 }
                                 else
                                 {
-                                    dataToDisplay_MapRenderer += "  ";
+                                    dataToDisplay_MapRenderer += " ";
                                 }
                             }
                             else
                             {
-                                dataToDisplay_MapRenderer += "  ";
+                                dataToDisplay_MapRenderer += " ";
                             }
                         }
                         else
                         {
-                            dataToDisplay_MapRenderer += "  ";
+                            dataToDisplay_MapRenderer += " ";
                         }
                     }
                     dataToDisplay_MapRenderer += "\n";
@@ -549,6 +632,31 @@ namespace KarmelCatalysEngine
             }
             Console.SetCursorPosition(0, 0);
             Console.Write(drawer_background_text.PastelBg(color));
+        }
+    }
+
+    public static class Screen
+    {
+        /// <summary>
+        /// Default is 8 (you can use 16 for big screen)
+        /// </summary>
+        public static void ChangeScreenZoom(short rate)
+        {
+            KarmelCatalys.Program.SetCurrentFont("Terminal", rate, rate);
+        }
+        /// <summary>
+        /// Default screen size is 52x52 (you can use 25x25 | 35x35 | 42x42)
+        /// </summary>
+        public static void ChangeScreenSize(int x, int y)
+        {
+            KarmelCatalys.Program.appWidth = x;
+            KarmelCatalys.Program.appHeight = y;
+            KarmelCatalys.Program.screenWidth = KarmelCatalys.Program.appWidth - 1;
+            KarmelCatalys.Program.screenHeight = KarmelCatalys.Program.appHeight - 1;
+#pragma warning disable CA1416 // Validate platform compatibility
+            Console.SetWindowSize(KarmelCatalys.Program.appWidth, KarmelCatalys.Program.appHeight);
+            Console.SetBufferSize(KarmelCatalys.Program.appWidth, KarmelCatalys.Program.appHeight);
+#pragma warning restore CA1416 // Validate platform compatibility
         }
     }
 
