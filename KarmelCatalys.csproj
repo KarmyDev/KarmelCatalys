@@ -10,18 +10,19 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BASS" Version="2.4.12.1" />
     <PackageReference Include="Bass.Net" Version="1.0.0" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Pastel" Version="2.1.0" />
     <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\Framework\v4.0.30319\System.Windows.Forms.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

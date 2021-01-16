@@ -99,6 +99,10 @@ namespace KarmelCatalys
 
         public static Workspace.Karmel karmelWorkspace;
 
+        /// <summary>
+        /// IF YOU CHANGE THIS TO FALSE THEN THE PROGRAM WILL STOP WORKING
+        /// </summary>
+        public static bool isProgramRunning = true;
         static void Main(string[] args)
         {
 
@@ -133,7 +137,7 @@ namespace KarmelCatalys
             karmelWorkspace.Start();
             var normalUpdate = Task.Run(async () =>
             {
-                while (true)
+                while (isProgramRunning)
                 {
                     slowUpdateTime++;
                     lazyUpdateTime++;
@@ -171,7 +175,7 @@ namespace KarmelCatalys
     {
         public static class UIDRAWER
         {
-            public static void BOXDRAWER_DRAW(Vec2Int boxSize, string color, string bgcolor)
+            public static void BOXDRAWER_DRAW(Vec2Int boxSize, string color, string bgcolor, bool fill)
             {
                 var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
 
@@ -179,26 +183,54 @@ namespace KarmelCatalys
                 string midlePartL = "║ ";
                 string midlePartR = " ║";
                 string lastPart = "╚═";
+                string fillPart = "";
                 for (int i = 0; i < boxSize.X - 1 ; i++)
                 {
                     firstPart += "══";
+                    fillPart += "  ";
                     lastPart += "══";
                 }
                 firstPart += "═╗";
                 lastPart += "═╝";
 
                 Console.Write(firstPart.Pastel(color).PastelBg(bgcolor));
-
-                for (int i = 0; i < boxSize.Y; i++)
+                if (!fill)
                 {
-                    cursor.Y += 1;
-                    Console.SetCursorPosition(cursor.X, cursor.Y);
-                    Console.Write(midlePartL.Pastel(color).PastelBg(bgcolor));
-                    Console.SetCursorPosition(cursor.X + boxSize.X * 2, cursor.Y);
-                    Console.Write(midlePartR.Pastel(color).PastelBg(bgcolor));
+                    for (int i = 0; i < boxSize.Y; i++)
+                    {
+                        cursor.Y += 1;
+                        Console.SetCursorPosition(cursor.X, cursor.Y);
+                        Console.Write(midlePartL.Pastel(color).PastelBg(bgcolor));
+                        Console.SetCursorPosition(cursor.X + boxSize.X * 2, cursor.Y);
+                        Console.Write(midlePartR.Pastel(color).PastelBg(bgcolor));
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < boxSize.Y; i++)
+                    {
+                        cursor.Y += 1;
+                        Console.SetCursorPosition(cursor.X, cursor.Y);
+                        Console.Write(midlePartL.Pastel(color).PastelBg(bgcolor));
+                        Console.Write(fillPart.Pastel(color).PastelBg(bgcolor));
+                        Console.Write(midlePartR.Pastel(color).PastelBg(bgcolor));
+                    }
                 }
                 Console.SetCursorPosition(cursor.X, cursor.Y + 1);
                 Console.Write(lastPart.Pastel(color).PastelBg(bgcolor));
+            }
+        }
+        public static class ERROR_BOX
+        {
+            public static void SHOW(string errorMessage, bool forceStop)
+            {
+                KarmelCatalys.Program.isProgramRunning = !forceStop;
+                Console.SetCursorPosition(0, 0);
+                KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 1), "#FF0000", "#000000", true);
+                Console.SetCursorPosition(2, 0);
+                Console.Write("Error".Pastel("#FF0000").PastelBg("#000000"));
+                Console.SetCursorPosition(2, 1);
+                Console.Write(errorMessage.Pastel("#FFFFFF").PastelBg("#000000"));
             }
         }
     }
@@ -217,6 +249,69 @@ namespace KarmelCatalysEngine
         }
     }
     */
+
+    public class IDMap
+    {
+        public Vec2Int Position { set; get; }
+        public int[,] MapObjectData { set; get; }
+        public string[] TileList { set; get; }
+
+        public void RenderMap()
+        {
+            MapRender(new Vec2Int(KarmelCatalys.Program.appWidth / 2, KarmelCatalys.Program.appHeight - 1), TileList);
+        }
+
+        public void RenderMap(Vec2Int screenSizeToRender)
+        {
+            MapRender(screenSizeToRender, TileList);
+        }
+
+        private string dataToDisplay_MapRenderer;
+        private void MapRender(Vec2Int screenSize, string[] tileList)
+        {
+            if (tileList != null)
+            {
+                dataToDisplay_MapRenderer = "";
+                for (int y = Position.Y; y  < screenSize.Y + Position.Y; y++)
+                {
+                    for (int x = Position.X; x < screenSize.X + Position.X; x++)
+                    {
+                        // Checks if tile is in array, if not returns deafult tile (0)
+                        if (y >= 0 && y < screenSize.Y + Position.Y && x >= 0 && x < screenSize.X + Position.X)
+                        {
+                            if (x >= 0 && x < MapObjectData.GetLength(1) - 1 && y >= 0 && y < MapObjectData.GetLength(0) - 1)
+                            {
+                                if (0 <= MapObjectData[y, x] && MapObjectData[y, x] <= tileList.Length - 1)
+                                {
+                                    dataToDisplay_MapRenderer += tileList[MapObjectData[y, x]];
+                                }
+                                else
+                                {
+                                    dataToDisplay_MapRenderer += "  ";
+                                }
+                            }
+                            else
+                            {
+                                dataToDisplay_MapRenderer += "  ";
+                            }
+                        }
+                        else
+                        {
+                            dataToDisplay_MapRenderer += "  ";
+                        }
+                    }
+                    dataToDisplay_MapRenderer += "\n";
+                }
+                
+                Console.SetCursorPosition(0, 0);
+                Console.Write(dataToDisplay_MapRenderer);
+            }
+            else // Exception
+            {
+                KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("TileList was not set!", true);
+            }
+        }
+    }
 
     public class Old_Audio
     {
@@ -305,7 +400,6 @@ namespace KarmelCatalysEngine
 
             using var fs = new FileStream(path, FileMode.Open);
             objs = MessagePackSerializer.Deserialize<MapObject[,]>(fs, lz4Options);
-
         }
 
         private string renderer_renderedMap;
@@ -423,17 +517,25 @@ namespace KarmelCatalysEngine
     {
         public static void DrawUIBox(Vec2Int boxSize)
         {
-            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, "#cccccc", "#0c0c0c");
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, "#cccccc", "#0c0c0c", false);
         }
         public static void DrawUIBox(Vec2Int boxSize, string color)
         {
-            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, "#0c0c0c");
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, "#0c0c0c", false);
         }
         public static void DrawUIBox(Vec2Int boxSize, string color, string bgcolor)
         {
-            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, bgcolor);
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, bgcolor, false);
         }
-        
+        public static void DrawUIBox(Vec2Int boxSize, string color, bool fill)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, "#0c0c0c", fill);
+        }
+        public static void DrawUIBox(Vec2Int boxSize, string color, string bgcolor, bool fill)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, color, bgcolor, fill);
+        }
+
         private static string drawer_background_text; // MOVE THIS THINGS TO ANOTHER CLASS FOR TEMP VARIABLESS
         public static void DrawBackground(string color)
         {
