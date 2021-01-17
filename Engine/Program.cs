@@ -307,18 +307,95 @@ namespace KarmelCatalys
                 Console.SetCursorPosition(cursor.X, cursor.Y + 1);
                 Console.Write(lastPart.Pastel(color).PastelBg(bgcolor));
             }
+            public static void LINEDRAWER_DRAW(int lineSize, KarmelCatalysEngine.UI.UILineMode lineMode, string color, string bgcolor)
+            {
+                var cursor = new Vec2Int(Console.CursorLeft, Console.CursorTop);
+                string horizontalChar = "═", verticalChar = "║";
+                string line = "";
+
+                switch (lineMode)
+                {
+                    case KarmelCatalysEngine.UI.UILineMode.Vertical:
+                        for (int i = 0; i < lineSize + 1; i++)
+                        {
+                            cursor.Y++;
+                            Console.SetCursorPosition(cursor.X, cursor.Y <= Console.BufferHeight - 1? cursor.Y : Console.BufferHeight - 1);
+                            Console.Write(verticalChar.Pastel(color).PastelBg(bgcolor));
+                        }
+                        break;
+
+                    case KarmelCatalysEngine.UI.UILineMode.Horizontal:
+                        for (int i = 0; i < lineSize + 1; i++)
+                        {
+                            line += horizontalChar;
+                        }
+                        Console.SetCursorPosition(cursor.X, cursor.Y);
+                        Console.Write(line.Pastel(color).PastelBg(bgcolor));
+                        break;
+                }
+
+
+
+            }
         }
         public static class ERROR_BOX
         {
-            public static void SHOW(string errorMessage, bool forceStop)
+            /// <summary>
+            /// This Error will force application to stop and exit console window when user press the Esc Key
+            /// </summary>
+            public static void SHOW(string errorMessage)
             {
-                KarmelCatalys.Program.isProgramRunning = !forceStop;
+                ShowingError(errorMessage, "No more details about this error were found!");
+            }
+
+            public static void SHOW(string errorMessage, string errorDetails)
+            {
+                ShowingError(errorMessage, errorDetails);
+            }
+
+            private static void ShowingError(string errorMessage, string moreDetails)
+            {
+                KarmelCatalys.Program.isProgramRunning = false;
+
                 Console.SetCursorPosition(0, 0);
-                KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 1), "#FF0000", "#000000", true);
+                KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#FF0000", "#000000", true);
                 Console.SetCursorPosition(2, 0);
                 Console.Write("Error".Pastel("#FF0000").PastelBg("#000000"));
-                Console.SetCursorPosition(2, 1);
+                Console.SetCursorPosition(2, 2);
                 Console.Write(errorMessage.Pastel("#FFFFFF").PastelBg("#000000"));
+                Console.SetCursorPosition(0, 5);
+                KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 1), "#A30000", "#000000", true);
+                Console.SetCursorPosition(2, 6);
+                Console.Write("Esc - Exit ".Pastel("#8A8A8A").PastelBg("#000000"));
+                Console.Write("║".Pastel("#A30000").PastelBg("#000000"));
+                Console.Write(" Tab - More details ".Pastel("#8A8A8A").PastelBg("#000000"));
+                Console.Write("║".Pastel("#A30000").PastelBg("#000000"));
+                Console.Write(" Space - Zoom ".Pastel("#8A8A8A").PastelBg("#000000"));
+                Console.SetCursorPosition(KarmelCatalys.Program.screenWidth, 7);
+                var key = new ConsoleKey();
+                while (key != ConsoleKey.Escape) 
+                {
+                    if (key == ConsoleKey.Tab)
+                    {
+                        Console.SetCursorPosition(0, 9);
+                        KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, (KarmelCatalys.Program.screenHeight - 1)- Console.CursorTop), "#000000", "#000000", true);
+                        Console.SetCursorPosition(0, 9);
+                        KarmelCatalysEngine.UI.DrawUILine(KarmelCatalys.Program.screenWidth, KarmelCatalysEngine.UI.UILineMode.Horizontal, "#FF0000", "#000000");
+                        Console.SetCursorPosition(2, 9);
+                        Console.Write("Details".Pastel("#FF0000").PastelBg("#000000"));
+                        Console.SetCursorPosition(1, 11);
+                        Console.Write(moreDetails.Pastel("#FFFFFF").PastelBg("#000000"));
+                        Console.SetCursorPosition(KarmelCatalys.Program.screenWidth, 13);
+                        key = new ConsoleKey();
+                    }
+                    else if (key == ConsoleKey.Spacebar)
+                    {
+                        KarmelCatalysEngine.Screen.ChangeScreenZoom(16);
+                        key = new ConsoleKey();
+                    }
+                    key = Console.ReadKey(true).Key;
+                }
+                Environment.Exit(1);
             }
         }
     }
@@ -396,7 +473,9 @@ namespace KarmelCatalysEngine
             }
             else // Exception
             {
-                KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("TileList was not set!", true);
+                KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("TileList was not set!", "You need to set TileList before rendering new map!"
+                    + "\n\n Example:\n\n" + 
+                    "  <idmap>.TileList = new string[] { \"A\", \"B\", \"C\"}\n");
             }
         }
     }
@@ -614,6 +693,23 @@ namespace KarmelCatalysEngine
     }
     public static class UI
     {
+        public enum UILineMode
+        { 
+            Vertical, Horizontal
+        }
+        public static void DrawUILine(int lineSize, UILineMode lineMode)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.LINEDRAWER_DRAW(lineSize, lineMode, "#cccccc", "#0c0c0c");
+        }
+        public static void DrawUILine(int lineSize, UILineMode lineMode, string color)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.LINEDRAWER_DRAW(lineSize, lineMode, color, "#0c0c0c");
+        }
+        public static void DrawUILine(int lineSize, UILineMode lineMode, string color, string bgcolor)
+        {
+            KarmelCatalys.FUNCTIONS.UIDRAWER.LINEDRAWER_DRAW(lineSize, lineMode, color, bgcolor);
+        }
+
         public static void DrawUIBox(Vec2Int boxSize)
         {
             KarmelCatalys.FUNCTIONS.UIDRAWER.BOXDRAWER_DRAW(boxSize, "#cccccc", "#0c0c0c", false);

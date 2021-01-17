@@ -54,9 +54,15 @@ namespace Workspace
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
             };
+            
             map01.TileList = new string[]
-            { " ", " ".PastelBg("#C816CB")  };
+            { " ", " ".PastelBg("#C816CB") };
             map01.RenderMap();
+
+            // vv ERROR TEST vv
+            //map01.TileList = null;
+            //map01.RenderMap();
+
             //KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("My personal error", false);
 
         }
@@ -76,7 +82,6 @@ namespace Workspace
         private int posX, posY;
         public void QuickUpdate() // QuickUpdate is called every ~ 0.5 seconds (or 0.001)
         {
-            
 
         }
 
