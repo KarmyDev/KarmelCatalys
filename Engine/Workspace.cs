@@ -64,17 +64,17 @@ namespace Workspace
         public void Start() // Start is called after Awake
         {
             // DONT TOUCH IT // Audio.PlayData(File.ReadAllBytes(@"C:\SpecialFolder\rmx.wav"));
-            mySong = new Old_Audio.Song(@"C:\SpecialFolder\rmx.wav");
-            yourSong = new Old_Audio.Song(@"C:\SpecialFolder\rmx.wav");
+            mySong = new Audio.Song(@"C:\SpecialFolder\rmx.wav");
+            yourSong = new Audio.Song(@"C:\SpecialFolder\rmx.wav");
             posX = -10;
             posY = -10;
             RenderFrame();
         }
         private IDMap map01;
-        private Old_Audio.Song mySong, yourSong;
+        private Audio.Song mySong, yourSong;
         private bool consoleActive = false;
         private int posX, posY;
-        public void Update() // Update is called every 0.01 seconds
+        public void QuickUpdate() // QuickUpdate is called every ~ 0.5 seconds (or 0.001)
         {
             
 
@@ -92,35 +92,44 @@ namespace Workspace
             Console.SetCursorPosition(0, 0);
         }
 
-        public void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds
+        public void Update() // Update is called every ~ 0.1 seconds
         {
+            if (!consoleActive)
+            {
+                if (Input.KeyDown(ConsoleKey.RightArrow))
+                {
+                    posX++;
+                    RenderFrame();
+                }
+                if (Input.KeyDown(ConsoleKey.LeftArrow))
+                {
+                    posX--;
+                    RenderFrame();
+                }
+                if (Input.KeyDown(ConsoleKey.UpArrow))
+                {
+                    posY--;
+                    RenderFrame();
+                }
+                if (Input.KeyDown(ConsoleKey.DownArrow))
+                {
+                    posY++;
+                    RenderFrame();
+                }
+            }
             var key = new ConsoleKey();
-            if (Input.KeyDown(ConsoleKey.RightArrow))
+            if (Input.KeyDown(ConsoleKey.Oem3))
             {
-                posX++;
-                RenderFrame();
-            }
-            if (Input.KeyDown(ConsoleKey.LeftArrow))
-            {
-                posX--;
-                RenderFrame();
-            }
-            if (Input.KeyDown(ConsoleKey.UpArrow))
-            {
-                posY--;
-                RenderFrame();
-            }
-            if (Input.KeyDown(ConsoleKey.DownArrow))
-            {
-                posY++;
-                RenderFrame();
-            }
-
-            if (Input.KeyDown(ConsoleKey.Enter) && !consoleActive)
-            {
-                Console.SetCursorPosition(0, 0);
-                Console.Write("»»");
-                consoleActive = true;
+                if (!consoleActive)
+                {
+                    Console.SetCursorPosition(0, 0);
+                    Console.Write("»");
+                }
+                else
+                {
+                    RenderFrame();
+                }
+                consoleActive = !consoleActive;
             }
             if (Input.AnyKey(out key) && consoleActive)
             {
@@ -128,9 +137,25 @@ namespace Workspace
                 {
                     Console.Write(" ");
                 }
+                else if (key == ConsoleKey.Backspace)
+                {
+                    Console.SetCursorPosition(Console.CursorLeft <= 1 ? 1 : Console.CursorLeft - 1, Console.CursorTop);
+                    Console.Write(" ");
+                    Console.SetCursorPosition(Console.CursorLeft <= 1 ? 1 : Console.CursorLeft - 1, Console.CursorTop);
+                }
                 else if (key == ConsoleKey.Enter)
                 {
-                    Console.Write("\n");
+                    RenderFrame();
+                    Console.SetCursorPosition(0, 0);
+                    Console.Write("»");
+                }
+                else if (key == ConsoleKey.LeftArrow)
+                {
+                    Console.SetCursorPosition(Console.CursorLeft <= 1 ? 1 : Console.CursorLeft - 1, Console.CursorTop);
+                }
+                else if (key == ConsoleKey.RightArrow)
+                {
+                    Console.SetCursorPosition(Console.CursorLeft >= KarmelCatalys.Program.appWidth - 1 ? KarmelCatalys.Program.appWidth - 1 : Console.CursorLeft + 1, Console.CursorTop);
                 }
                 else
                 {
@@ -138,6 +163,12 @@ namespace Workspace
                 }
 
             }
+
+        }
+
+        public void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds
+        {  
+           
         }
 
         public void LazyUpdate() // LazyUpdate is called every ~ 1 second

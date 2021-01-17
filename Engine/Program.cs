@@ -5,7 +5,6 @@ using System.Media;
 using System;
 
 //Required
-using Un4seen.Bass;
 
 // Experimental
 
@@ -218,14 +217,20 @@ namespace KarmelCatalys
 
             karmelWorkspace.Awake();
             karmelWorkspace.Start();
-            var normalUpdate = Task.Run(async () =>
+            var updates = Task.Run(async () =>
             {
                 while (isProgramRunning)
                 {
                     slowUpdateTime++;
                     lazyUpdateTime++;
+                    normalUpdateTime++;
                     await Task.Delay(1);
-                    var update = Task.Run(karmelWorkspace.Update);
+                    var quickUpdate = Task.Run(karmelWorkspace.QuickUpdate);
+                    if (normalUpdateTime >= 5)
+                    {
+                        var normalUpdate = Task.Run(karmelWorkspace.Update);
+                        normalUpdateTime = 0;
+                    }
                     if (slowUpdateTime >= 10)
                     {
                         var slowUpdate = Task.Run(karmelWorkspace.SlowUpdate);
@@ -247,7 +252,7 @@ namespace KarmelCatalys
             }
             Environment.Exit(0);
         }
-        private static int slowUpdateTime = 0, lazyUpdateTime = 0;
+        private static int slowUpdateTime = 0, normalUpdateTime = 0, lazyUpdateTime = 0;
 
         public static bool dontCloseApp = true;
         public static ConsoleKey pressedKey;
@@ -396,7 +401,7 @@ namespace KarmelCatalysEngine
         }
     }
 
-    public class Old_Audio
+    public class Audio
     {
         public class Song
         {
@@ -563,8 +568,14 @@ namespace KarmelCatalysEngine
         public string character, color, bgcolor, eventData;
     }
 
+    /// <summary>
+    /// Handles console input
+    /// </summary>
     public static class Input
     {
+        /// <summary>
+        /// Returns true if specified key is pressed
+        /// </summary>
         public static bool KeyDown(ConsoleKey key)
         {
             if (KarmelCatalys.Program.pressedKey == key)
@@ -574,7 +585,9 @@ namespace KarmelCatalysEngine
             }
             return false;
         }
-
+        /// <summary>
+        ///  Returns true and Console Key if any key is pressed
+        /// </summary>
         public static bool AnyKey(out ConsoleKey key)
         {
             key = KarmelCatalys.Program.pressedKey;
@@ -586,6 +599,9 @@ namespace KarmelCatalysEngine
             key = ConsoleKey.NoName;
             return false;
         }
+        /// <summary>
+        /// Returns true if any key is pressed
+        /// </summary>
         public static bool AnyKey()
         { 
             if (KarmelCatalys.Program.pressedKey != ConsoleKey.NoName)
