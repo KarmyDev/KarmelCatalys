@@ -196,15 +196,13 @@ namespace KarmelCatalys
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
-            
+
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
 
             SetCurrentFont("Terminal", 8, 8);
 
-            #endregion
-
-            #region Prepare Bass (Disabled)
-            // Bass.BASS_Init(-1, -1, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
             #endregion
 
             #region Prepare Variables
@@ -358,18 +356,28 @@ namespace KarmelCatalys
                 KarmelCatalys.Program.isProgramRunning = false;
 
                 Console.SetCursorPosition(0, 0);
-                KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#FF0000", "#000000", true);
+                UIDRAWER.BOXDRAWER_DRAW(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#FF0000", "#000000", true);
                 Console.SetCursorPosition(2, 0);
                 Console.Write("Error".Pastel("#FF0000").PastelBg("#000000"));
                 Console.SetCursorPosition(2, 2);
                 Console.Write(errorMessage.Pastel("#FFFFFF").PastelBg("#000000"));
                 Console.SetCursorPosition(0, 5);
-                KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 1), "#A30000", "#000000", true);
+                UIDRAWER.BOXDRAWER_DRAW(new Vec2Int(KarmelCatalys.Program.screenWidth, 1), "#A30000", "#000000", true);
                 Console.SetCursorPosition(2, 6);
                 Console.Write("Esc - Exit ".Pastel("#8A8A8A").PastelBg("#000000"));
                 Console.Write("║".Pastel("#A30000").PastelBg("#000000"));
+                Console.SetCursorPosition(Console.CursorLeft - 1,Console.CursorTop - 1);
+                Console.Write("╦".Pastel("#A30000").PastelBg("#000000"));
+                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop + 2);
+                Console.Write("╩".Pastel("#A30000").PastelBg("#000000"));
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
                 Console.Write(" Tab - More details ".Pastel("#8A8A8A").PastelBg("#000000"));
                 Console.Write("║".Pastel("#A30000").PastelBg("#000000"));
+                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop - 1);
+                Console.Write("╦".Pastel("#A30000").PastelBg("#000000"));
+                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop + 2);
+                Console.Write("╩".Pastel("#A30000").PastelBg("#000000"));
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
                 Console.Write(" Space - Zoom ".Pastel("#8A8A8A").PastelBg("#000000"));
                 Console.SetCursorPosition(KarmelCatalys.Program.screenWidth, 7);
                 var key = new ConsoleKey();
@@ -378,9 +386,9 @@ namespace KarmelCatalys
                     if (key == ConsoleKey.Tab)
                     {
                         Console.SetCursorPosition(0, 9);
-                        KarmelCatalysEngine.UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, (KarmelCatalys.Program.screenHeight - 1)- Console.CursorTop), "#000000", "#000000", true);
+                        UIDRAWER.BOXDRAWER_DRAW(new Vec2Int(KarmelCatalys.Program.screenWidth, (KarmelCatalys.Program.screenHeight - 1)- Console.CursorTop), "#000000", "#000000", true);
                         Console.SetCursorPosition(0, 9);
-                        KarmelCatalysEngine.UI.DrawUILine(KarmelCatalys.Program.screenWidth, KarmelCatalysEngine.UI.UILineMode.Horizontal, "#FF0000", "#000000");
+                        UIDRAWER.LINEDRAWER_DRAW(KarmelCatalys.Program.screenWidth, KarmelCatalysEngine.UI.UILineMode.Horizontal, "#FF0000", "#000000");
                         Console.SetCursorPosition(2, 9);
                         Console.Write("Details".Pastel("#FF0000").PastelBg("#000000"));
                         Console.SetCursorPosition(1, 11);
@@ -404,17 +412,7 @@ namespace KarmelCatalys
 
 namespace KarmelCatalysEngine
 {
-    /* THIS IS BASS CLASS - ITS CURRENTLY DISABLED
-    public static class Audio
-    {
-
-        public static void PlayData(byte[] data)
-        {
-            Bass.BASS_ChannelPlay(Bass.BASS_StreamPutData(Bass.BASS_StreamCreatePush(0, 0, BASSFlag.BASS_STREAM_AUTOFREE, IntPtr.Zero), data, 0), false);
-        }
-    }
-    */
-
+    
     public class IDMap
     {
         public Vec2Int Position { set; get; }
@@ -475,7 +473,7 @@ namespace KarmelCatalysEngine
             {
                 KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("TileList was not set!", "You need to set TileList before rendering new map!"
                     + "\n\n Example:\n\n" + 
-                    "  <idmap>.TileList = new string[] { \"A\", \"B\", \"C\"}\n");
+                    "  <idmap>.TileList = new string[] { \"A\", \"B\", \"C\"};\n");
             }
         }
     }
