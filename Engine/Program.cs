@@ -187,6 +187,7 @@ namespace KarmelCatalys
 
             #region PrepareWindow
             QuickEditMode(false);
+            SetCurrentFont("Terminal", 8, 8);
 #pragma warning disable CA1416 // Weryfikuj zgodność z platformą
             Console.SetWindowSize(appWidth, appHeight);
             Console.SetBufferSize(appWidth, appHeight);
@@ -197,11 +198,11 @@ namespace KarmelCatalys
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-
+            Console.OutputEncoding = System.Text.Encoding.UTF8;    
+        
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
 
-            SetCurrentFont("Terminal", 8, 8);
+            
 
             #endregion
 
@@ -209,6 +210,14 @@ namespace KarmelCatalys
             screenWidth = appWidth - 1;
             screenHeight = appHeight - 1;
             #endregion
+
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => {
+                if (KarmelCatalysEngine.DiscordRpc.IsEnabled)
+                {
+                    KarmelCatalysEngine.DiscordRpc.Disable();
+                }
+                karmelWorkspace.OnExit();
+            };
 
             #region PrepareKarmelVoids
             karmelWorkspace = new Workspace.Karmel();
@@ -243,6 +252,7 @@ namespace KarmelCatalys
             });
             #endregion
 
+
             while (dontCloseApp)
             {
                 
@@ -252,6 +262,9 @@ namespace KarmelCatalys
         }
         private static int slowUpdateTime = 0, normalUpdateTime = 0, lazyUpdateTime = 0;
 
+        /// <summary>
+        /// IF YOU SET THIS TO FALSE THEN CONSOLE WILL CLOSE
+        /// </summary>
         public static bool dontCloseApp = true;
         public static ConsoleKey pressedKey;
 
@@ -773,5 +786,50 @@ namespace KarmelCatalysEngine
     public static class Paths
     {
         public static string MainDirectory { get; } = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName);
+    }
+
+
+    public static class DiscordRpc
+    {
+        public static DiscordRPC.DiscordRpcClient client = new DiscordRPC.DiscordRpcClient("800396481034321920");
+        public static bool IsEnabled { private set; get; }  = false;
+        
+        public static string GameName { set; get; }
+
+        public static void Show()
+        {
+            if (!IsEnabled)
+            {
+                client.Initialize();
+                IsEnabled = true;
+            }
+            
+
+            string gameState = "";
+            if (GameName != null)
+            {
+                gameState = "Playing " + GameName;
+            }
+            else
+            {
+                gameState = "Running unknown app";
+            }
+            client.SetPresence(new DiscordRPC.RichPresence()
+            {
+                Details = "[Console Game Engine]",
+                State = gameState,
+                Assets = new DiscordRPC.Assets()
+                {
+                    LargeImageKey = "app",
+                    LargeImageText = "KarmelCatalys",
+                }
+            });
+        }
+
+        public static void Disable()
+        {
+            client.Dispose();
+            IsEnabled = false;
+        }
     }
 }

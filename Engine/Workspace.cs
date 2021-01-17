@@ -19,6 +19,8 @@ namespace Workspace
 
         public void Awake() // Awake is the frist method that's called
         {
+            DiscordRpc.GameName = "Sokoban";
+            DiscordRpc.Show();
 
             // UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, KarmelCatalys.Program.screenHeight),"#26FF00");
             Console.SetCursorPosition(0, 0);
@@ -181,6 +183,11 @@ namespace Workspace
         public void LazyUpdate() // LazyUpdate is called every ~ 1 second
         {
             
+        }
+
+        public void OnExit() // OnExit is called when you before you close console
+        { 
+        
         }
 
         // ### Workspace ###

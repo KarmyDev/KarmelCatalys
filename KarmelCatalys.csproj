@@ -18,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.0.169" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Pastel" Version="2.1.0" />
     <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
