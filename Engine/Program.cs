@@ -205,7 +205,7 @@ namespace KarmelCatalys
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
-
+            Console.Clear();
             #endregion
 
             #region LegacyConsoleWarning
@@ -225,6 +225,7 @@ namespace KarmelCatalys
             {
                 Console.Title = "Legacy Mode Warning";
                 KarmelCatalysEngine.Screen.ChangeScreenSize(52, 25);
+                KarmelCatalysEngine.Screen.ChangeScreenZoom(16);
                 Console.SetCursorPosition(0, 0);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("\n\n The console is currently running in Legacy mode,\n which is not supported by this application.\n" +
@@ -235,21 +236,110 @@ namespace KarmelCatalys
                     "\n\n <?> This will prevent the text from being\n displayed incorrectly.\n\n\n");
 
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(" Press [SPACE] to enlarge the text.\n\n Press [ESC] to close this program.");
+                Console.Write(" Press [ESC] to close this program.");
                 var key = new ConsoleKey();
                 while (key != ConsoleKey.Escape)
                 {
-                    if (key == ConsoleKey.Spacebar)
-                    {
-                        key = new ConsoleKey();
-                        KarmelCatalysEngine.Screen.ChangeScreenSize(52, 24);
-                        KarmelCatalysEngine.Screen.ChangeScreenZoom(16);
-                    }
                     key = Console.ReadKey(true).Key;
                 }
                 Environment.Exit(0);
             }
             #endregion
+
+            #region OtherWindowsVersionWarning
+            if (!Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "productName", "").ToString().StartsWith("Windows 10"))
+            {
+                Console.Title = "OS Version Warning";
+                KarmelCatalysEngine.Screen.ChangeScreenSize(62, 25);
+                KarmelCatalysEngine.Screen.ChangeScreenZoom(16);
+                Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                Console.Write("\n OOPS!\n\n Looks like you are using unsupported version of Windows." +
+                    "\n Make sure you are using Windows 10 x86 or x64 version.\n\n");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(" Currently this application don't have color support for\n older versions of Windows." +  
+                    "\n\n <!> The \"Renderer\" would have so much problems while trying\n to write other colors.\n");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("\n Your current OS is " + Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "productName", "").ToString());
+                Console.Write("\n ");
+                int conX = 1;
+                int conY = 16;
+                Console.SetCursorPosition(conX, conY + 5);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Write("Select: ↕ \n ENTER: Choose");
+                Console.SetCursorPosition(conX, conY);
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.Write(" [I'm pretty sure my OS is Compatible, let me run it!] ");
+                Console.SetCursorPosition(conX, conY + 1);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Write(" [Quit] ");
+                var key = new ConsoleKey();
+                int selectedBox = 0;
+                bool waitUntilAllow = true;
+                while (waitUntilAllow)
+                {
+                    key = Console.ReadKey(true).Key;
+
+                    if (key == ConsoleKey.UpArrow)
+                    {
+                        selectedBox--;
+                        Console.SetCursorPosition(conX, conY);
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write(" [I'm pretty sure my OS is Compatible, let me run it!] ");
+                        Console.SetCursorPosition(conX, conY + 1);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(" [Quit] ");
+                    }
+                    if (key == ConsoleKey.DownArrow)
+                    {
+                        selectedBox++;
+                        Console.SetCursorPosition(conX, conY);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(" [I'm pretty sure my OS is Compatible, let me run it!] ");
+                        Console.SetCursorPosition(conX, conY + 1);
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write(" [Quit] ");
+                    }
+                    if (selectedBox <= -1)
+                    {
+                        selectedBox = 0;
+                    }
+                    else if (selectedBox >= 2)
+                    {
+                        selectedBox = 1;
+                    }
+
+                    if (key == ConsoleKey.Enter)
+                    {
+                        key = new ConsoleKey();
+                        if (selectedBox == 1)
+                        {
+                            Environment.Exit(0);
+                        }
+                        else
+                        {
+                            waitUntilAllow = false;
+                            Console.Clear();
+                        }
+                    }
+
+                    
+                }
+                KarmelCatalysEngine.Screen.ChangeScreenSize(52, 52);
+                KarmelCatalysEngine.Screen.ChangeScreenZoom(8);
+
+            }
+            #endregion
+
+            
 
             #region Prepare Variables
             screenWidth = appWidth - 1;
