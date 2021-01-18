@@ -230,8 +230,7 @@ namespace KarmelCatalys
                     "\n If you want to use this application disable legacy\n mode by right clicking on the top bar,\n select Properties and uncheck \"Use Legacy mode\",\n then close and restart the application.\n\n\n");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(" Press Esc to close this program.");
-                while (Console.ReadKey(true).Key != ConsoleKey.Escape)
-                { }
+                while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
                 Environment.Exit(0);
             }
             #endregion
