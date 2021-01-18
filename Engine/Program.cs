@@ -432,6 +432,36 @@ namespace KarmelCatalysEngine
         public int[,] MapObjectData { set; get; }
         public string[] TileList { set; get; }
 
+        public void SetMapObject(int x, int y, int newObject)
+        {
+            if (x >= 0 && x < MapObjectData.GetLength(1) - 1 && y >= 0 && y < MapObjectData.GetLength(0) - 1)
+            {
+                MapObjectData[y + 1, x] = newObject;
+            }
+            else
+            {
+                KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("MapID position was outside of an MapSize");
+            }
+        }
+
+        public int GetMapIDFromTile(Vec2Int idPos)
+        {
+            if (idPos.X >= 0 && idPos.X < MapObjectData.GetLength(1) - 1 && idPos.Y >= 0 && idPos.Y < MapObjectData.GetLength(0) - 1)
+            {
+                return MapObjectData[idPos.Y + 1, idPos.X];
+            }
+            else
+            {
+                KarmelCatalys.FUNCTIONS.ERROR_BOX.SHOW("IdPos was outside of a MapSize");
+            }
+            return 0;
+        }
+
+        public Vec2Int ScreenToMapIDPosition(Vec2Int positionOnScreen)
+        {
+            return new Vec2Int(positionOnScreen.X + Position.X , positionOnScreen.Y + Position.Y );
+        }
+
         public void RenderMap()
         {
             MapRender(new Vec2Int(KarmelCatalys.Program.appWidth, KarmelCatalys.Program.appHeight), TileList);

@@ -19,7 +19,8 @@ namespace Workspace
 
         public void Awake() // Awake is the frist method that's called
         {
-            DiscordRpc.GameName = "Sokoban";
+            Console.Title = "Sokoban 1.0";
+            DiscordRpc.GameName = "Sokoban 1.0";
             DiscordRpc.Show();
 
             // UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, KarmelCatalys.Program.screenHeight),"#26FF00");
@@ -28,38 +29,28 @@ namespace Workspace
 
             map01 = new IDMap();
             map01.MapObjectData = new int[,] {
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
             };
-            
+
             map01.TileList = new string[]
-            { " ", " ".PastelBg("#C816CB") };
+            { " ", " ".PastelBg("#C816CB"), " ".PastelBg("#ECF100"), "■".Pastel("#1BA833"), "■".Pastel("#AAAE00").PastelBg("#ECF100") };
             map01.RenderMap();
 
             //vv ERROR TEST vv
@@ -74,57 +65,43 @@ namespace Workspace
         public void Start() // Start is called after Awake
         {
             // DONT TOUCH IT // Audio.PlayData(File.ReadAllBytes(@"C:\SpecialFolder\rmx.wav"));
-            mySong = new Audio.Song(@"C:\SpecialFolder\rmx.wav");
-            yourSong = new Audio.Song(@"C:\SpecialFolder\rmx.wav");
+            //mySong = new Audio.Song(@"C:\SpecialFolder\rmx.wav");
+            //yourSong = new Audio.Song(@"C:\SpecialFolder\rmx.wav");
             posX = -10;
-            posY = -10;
+            posY = -17;
             RenderFrame();
         }
         private IDMap map01;
-        private Audio.Song mySong, yourSong;
+        //private Audio.Song mySong, yourSong;
         private bool consoleActive = false;
-        private int posX, posY;
+        private bool isGameEnd = false;
+        private int posX, posY, playerPosX, playerPosY;
         public void QuickUpdate() // QuickUpdate is called every ~ 0.5 seconds (or 0.001)
         {
 
         }
 
-        public void RenderFrame()
-        {
-            map01.Position = new Vec2Int(posX, posY);
-            Console.SetCursorPosition(0, 0);
-            map01.RenderMap();
-            Console.SetCursorPosition(0, 0);
-            UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#16FF00", true);
-            Console.SetCursorPosition(2, 2);
-            Console.Write("            Lives: 4   |   Keys: 0");
-            Console.SetCursorPosition(0, 0);
-        }
-
         public void Update() // Update is called every ~ 0.1 seconds
         {
-            if (!consoleActive)
+            if (!consoleActive && !isGameEnd)
             {
                 if (Input.KeyDown(ConsoleKey.RightArrow))
                 {
-                    posX++;
-                    RenderFrame();
+                    MovePlayerByShift(1, 0);
                 }
                 if (Input.KeyDown(ConsoleKey.LeftArrow))
                 {
-                    posX--;
-                    RenderFrame();
+                    MovePlayerByShift(-1, 0);
                 }
                 if (Input.KeyDown(ConsoleKey.UpArrow))
                 {
-                    posY--;
-                    RenderFrame();
+                    MovePlayerByShift(0, -1);
                 }
                 if (Input.KeyDown(ConsoleKey.DownArrow))
                 {
-                    posY++;
-                    RenderFrame();
+                    MovePlayerByShift(0, 1);
                 }
+
             }
             var key = new ConsoleKey();
             if (Input.KeyDown(ConsoleKey.Oem3))
@@ -191,6 +168,116 @@ namespace Workspace
         }
 
         // ### Workspace ###
-       
+        // -- Game Vars
+        public static int currentLevel = 0;
+        public static int boxesInRow = 0;
+
+
+
+        public void MovePlayerByShift(int x, int y)
+        {
+            switch (GetTileIDByPlayerShift(x, y))
+            {
+                case 0:
+                case 3:
+                    posY += y;
+                    posX += x;
+                    RenderFrame();
+                    break;
+
+                case 2:
+                    switch (GetTileIDByPlayerShift(x + x, y + y))
+                    {
+                        case 0:
+                            posY += y;
+                            posX += x;
+                            Vec2Int pos = map01.ScreenToMapIDPosition(new Vec2Int(playerPosX + x, playerPosY + y));
+                            map01.SetMapObject(pos.X, pos.Y, 0);
+                            map01.SetMapObject(pos.X + x, pos.Y + y, 2);
+                            RenderFrame();
+
+                            CheckLevelScore();
+                            break;
+                        case 3:
+                            posY += y;
+                            posX += x;
+                            Vec2Int pos2 = map01.ScreenToMapIDPosition(new Vec2Int(playerPosX + x, playerPosY + y));
+                            map01.SetMapObject(pos2.X, pos2.Y, 0);
+                            map01.SetMapObject(pos2.X + x, pos2.Y + y, 4);
+                            boxesInRow++;
+                            RenderFrame();
+
+                            CheckLevelScore();
+                            break;
+                    }
+                    break;
+
+                case 4:
+                    switch (GetTileIDByPlayerShift(x + x, y + y))
+                    {
+                        case 0:
+                            posY += y;
+                            posX += x;
+                            Vec2Int pos = map01.ScreenToMapIDPosition(new Vec2Int(playerPosX + x, playerPosY + y));
+                            map01.SetMapObject(pos.X, pos.Y, 3);
+                            map01.SetMapObject(pos.X + x, pos.Y + y, 2);
+                            boxesInRow--;
+                            RenderFrame();
+                            break;
+                        case 3:
+                            posY += y;
+                            posX += x;
+                            Vec2Int pos2 = map01.ScreenToMapIDPosition(new Vec2Int(playerPosX + x, playerPosY + y));
+                            map01.SetMapObject(pos2.X, pos2.Y, 3);
+                            map01.SetMapObject(pos2.X + x, pos2.Y + y, 4);
+                            RenderFrame();
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        public void CheckLevelScore()
+        {
+            switch (currentLevel)
+            {
+                case 0:
+                    if (boxesInRow == 6)
+                    {
+                        currentLevel++;
+                        UI.DrawBackground("#3FA4B3");
+                        Console.SetCursorPosition(KarmelCatalys.Program.screenWidth/2 - 5, KarmelCatalys.Program.screenHeight /2);
+                        Console.Write(" You win! ".Pastel("#FAFF00").PastelBg("#000000"));
+                        isGameEnd = true;
+                    }
+                    break;
+            }
+        }
+
+
+        public int GetTileIDByPlayerShift(int xShift, int yShift)
+        { 
+            return map01.GetMapIDFromTile(map01.ScreenToMapIDPosition(new Vec2Int(playerPosX + xShift, playerPosY + yShift)));
+        }
+
+        public void RenderFrame()
+        {
+            map01.Position = new Vec2Int(posX, posY);
+            playerPosX = KarmelCatalys.Program.screenWidth / 2;
+            playerPosY = KarmelCatalys.Program.screenHeight / 2;
+            Console.SetCursorPosition(0, 0);
+            map01.RenderMap();
+            Console.SetCursorPosition(0, 0);
+
+            UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#16FF00", true);
+            Console.SetCursorPosition(2, 2);
+            Console.Write("        Level: " + currentLevel + "   |   Boxes in a row: " + boxesInRow);
+
+            Console.SetCursorPosition(playerPosX, playerPosY);
+            Console.Write("@".Pastel("#00FF8D"));
+            Console.SetCursorPosition(0, 0);
+
+        }
+
     }
 }
