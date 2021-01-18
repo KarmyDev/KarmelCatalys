@@ -25,7 +25,6 @@ namespace Workspace
 
             // UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, KarmelCatalys.Program.screenHeight),"#26FF00");
             Console.SetCursorPosition(0, 0);
-            UI.DrawBackground("#000000");
 
             map01 = new IDMap();
             map01.MapObjectData = new int[,] {
@@ -45,10 +44,27 @@ namespace Workspace
                 { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+
+                
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-            };
+
+        };
 
             map01.TileList = new string[]
             { " ", " ".PastelBg("#C816CB"), " ".PastelBg("#ECF100"), "■".Pastel("#1BA833"), "■".Pastel("#AAAE00").PastelBg("#ECF100") };
@@ -114,7 +130,16 @@ namespace Workspace
                 }
                 else
                 {
-                    RenderFrame();
+                    if (!isGameEnd)
+                    {
+                        RenderFrame();
+                    }
+                    else
+                    {
+                        UI.DrawBackground("#3FA4B3");
+                        Console.SetCursorPosition(KarmelCatalys.Program.screenWidth / 2 - 5, KarmelCatalys.Program.screenHeight / 2);
+                        Console.Write(" You win! ".Pastel("#FAFF00").PastelBg("#000000"));
+                    }
                 }
                 consoleActive = !consoleActive;
             }
@@ -132,7 +157,16 @@ namespace Workspace
                 }
                 else if (key == ConsoleKey.Enter)
                 {
-                    RenderFrame();
+                    if (!isGameEnd)
+                    {
+                        RenderFrame();
+                    }
+                    else
+                    {
+                        UI.DrawBackground("#3FA4B3");
+                        Console.SetCursorPosition(KarmelCatalys.Program.screenWidth / 2 - 5, KarmelCatalys.Program.screenHeight / 2);
+                        Console.Write(" You win! ".Pastel("#FAFF00").PastelBg("#000000"));
+                    }
                     Console.SetCursorPosition(0, 0);
                     Console.Write("»");
                 }
@@ -267,12 +301,12 @@ namespace Workspace
             playerPosX = KarmelCatalys.Program.screenWidth / 2;
             playerPosY = KarmelCatalys.Program.screenHeight / 2;
             Console.SetCursorPosition(0, 0);
+            
             map01.RenderMap();
             Console.SetCursorPosition(0, 0);
-
             UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#16FF00", true);
-            Console.SetCursorPosition(2, 2);
-            Console.Write("        Level: " + currentLevel + "   |   Boxes in a row: " + boxesInRow);
+            Console.SetCursorPosition(KarmelCatalys.Program.screenWidth/4, 2);
+            Console.Write(("Level: " + currentLevel + "   |   Boxes in a row: " + boxesInRow).ToString().Pastel("#FFFFFF"));
 
             Console.SetCursorPosition(playerPosX, playerPosY);
             Console.Write("@".Pastel("#00FF8D"));

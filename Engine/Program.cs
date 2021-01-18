@@ -198,12 +198,42 @@ namespace KarmelCatalys
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
+            Console.CursorVisible = false;
+#pragma warning disable CA1416 // Validate platform compatibility
+            Console.CursorSize = 1;
+#pragma warning restore CA1416 // Validate platform compatibility
             Console.OutputEncoding = System.Text.Encoding.UTF8;    
         
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
 
-            
+            #endregion
 
+            #region LegacyConsoleWarning
+            bool isLegacyMode = false;
+            var legacyModeRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Console");
+            if (legacyModeRegKey != null)
+            {
+                var keyVar = Convert.ToInt32(legacyModeRegKey.GetValue("ForceV2", 1));
+                if (keyVar != 1)
+                {
+                    isLegacyMode = true;
+                }
+                legacyModeRegKey.Close();
+            }
+
+            if (isLegacyMode)
+            {
+                KarmelCatalysEngine.Screen.ChangeScreenSize(52, 15);
+                Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("\n\n The console is currently running in Legacy mode,\n which is not supported by this application.\n" +
+                    "\n If you want to use this application disable legacy\n mode by right clicking on the top bar,\n select Properties and uncheck \"Use Legacy mode\",\n then close and restart the application.\n\n\n");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" Press Esc to close this program.");
+                while (Console.ReadKey(true).Key != ConsoleKey.Escape)
+                { }
+                Environment.Exit(0);
+            }
             #endregion
 
             #region Prepare Variables
@@ -464,16 +494,17 @@ namespace KarmelCatalysEngine
 
         public void RenderMap()
         {
-            MapRender(new Vec2Int(KarmelCatalys.Program.appWidth, KarmelCatalys.Program.appHeight), TileList);
+            MapRender(new Vec2Int(KarmelCatalys.Program.appWidth, KarmelCatalys.Program.appHeight), TileList, 0, 0);
         }
 
         public void RenderMap(Vec2Int screenSizeToRender)
         {
-            MapRender(screenSizeToRender, TileList);
+            MapRender(screenSizeToRender, TileList, 0, 0);
         }
 
+
         private string dataToDisplay_MapRenderer;
-        private void MapRender(Vec2Int screenSize, string[] tileList)
+        private void MapRender(Vec2Int screenSize, string[] tileList, int rendererStartX, int rendererStartY)
         {
             if (tileList != null)
             {
@@ -509,7 +540,7 @@ namespace KarmelCatalysEngine
                     dataToDisplay_MapRenderer += "\n";
                 }
                 
-                Console.SetCursorPosition(0, 0);
+                Console.SetCursorPosition(rendererStartX, rendererStartY);
                 Console.Write(dataToDisplay_MapRenderer);
             }
             else // Exception
