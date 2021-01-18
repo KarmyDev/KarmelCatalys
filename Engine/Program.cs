@@ -202,8 +202,8 @@ namespace KarmelCatalys
 #pragma warning disable CA1416 // Validate platform compatibility
             Console.CursorSize = 1;
 #pragma warning restore CA1416 // Validate platform compatibility
-            Console.OutputEncoding = System.Text.Encoding.UTF8;    
-        
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             Console.Title = "KarmelCatalys Runtime \"Engine\"";
 
             #endregion
@@ -223,14 +223,30 @@ namespace KarmelCatalys
 
             if (isLegacyMode)
             {
-                KarmelCatalysEngine.Screen.ChangeScreenSize(52, 15);
+                Console.Title = "Legacy Mode Warning";
+                KarmelCatalysEngine.Screen.ChangeScreenSize(52, 25);
                 Console.SetCursorPosition(0, 0);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("\n\n The console is currently running in Legacy mode,\n which is not supported by this application.\n" +
-                    "\n If you want to use this application disable legacy\n mode by right clicking on the top bar,\n select Properties and uncheck \"Use Legacy mode\",\n then close and restart the application.\n\n\n");
+                    "\n If you want to use this application disable legacy\n mode by right clicking on the top bar,\n select [Properties] and uncheck \"Use Legacy mode\",\n then close and restart the application.\n\n");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(" (!) After you disable legacy mode and click 'OK'\n Open Properties window again" + 
+                    " and go to the \n \"Terminal\" > \"Terminal colors\" box, then disable\n \"Use Separate Foreground\" and \"Use Separate\n Background\""+
+                    "\n\n <?> This will prevent the text from being\n displayed incorrectly.\n\n\n");
+
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(" Press Esc to close this program.");
-                while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
+                Console.Write(" Press [SPACE] to enlarge the text.\n\n Press [ESC] to close this program.");
+                var key = new ConsoleKey();
+                while (key != ConsoleKey.Escape)
+                {
+                    if (key == ConsoleKey.Spacebar)
+                    {
+                        key = new ConsoleKey();
+                        KarmelCatalysEngine.Screen.ChangeScreenSize(52, 24);
+                        KarmelCatalysEngine.Screen.ChangeScreenZoom(16);
+                    }
+                    key = Console.ReadKey(true).Key;
+                }
                 Environment.Exit(0);
             }
             #endregion
