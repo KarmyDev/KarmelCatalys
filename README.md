@@ -4,6 +4,7 @@ The engine only works on Windows 10 since Win 8/7 etc. display colors as unicode
 
 
 ## Documentation
-https://github.com/KSZLAGK/KarmelCatalys.wiki.git
+
+https://github.com/KSZLAGK/KarmelCatalys/wiki/Basic-Docs
 
 **For now this project is kinda abandoned.**
