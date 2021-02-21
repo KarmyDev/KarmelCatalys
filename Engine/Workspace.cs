@@ -172,7 +172,7 @@ namespace Workspace
         }
 
         public void SlowUpdate() // SlowUpdate is called every ~ 0.5 seconds
-        {  
+        {
            
         }
 
