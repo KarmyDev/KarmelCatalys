@@ -247,6 +247,7 @@ namespace KarmelCatalys
             #endregion
 
             #region OtherWindowsVersionWarning
+            /* IGNORE CMD WARNINGS
             if (!Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "productName", "").ToString().StartsWith("Windows 10"))
             {
                 Console.Title = "OS Version Warning";
@@ -337,6 +338,7 @@ namespace KarmelCatalys
                 KarmelCatalysEngine.Screen.ChangeScreenZoom(8);
 
             }
+            */
             #endregion
 
             
