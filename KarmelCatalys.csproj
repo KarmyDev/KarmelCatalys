@@ -24,4 +24,8 @@
     <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
 </Project>

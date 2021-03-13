@@ -19,6 +19,9 @@ namespace Workspace
 
         public void Awake() // Awake is the frist method that's called
         {
+            var cOut = Console.Out;
+
+
             Console.Title = "Sokoban 1.0";
             DiscordRpc.GameName = "Sokoban 1.0";
             DiscordRpc.Show();
@@ -27,6 +30,7 @@ namespace Workspace
             Console.SetCursorPosition(0, 0);
 
             map01 = new IDMap();
+            /*
             map01.MapObjectData = new int[,] {
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
@@ -52,6 +56,67 @@ namespace Workspace
 
             map01.TileList = new string[]
             { " ", " ".PastelBg("#C816CB"), " ".PastelBg("#ECF100"), "■".Pastel("#1BA833"), "■".Pastel("#AAAE00").PastelBg("#ECF100") };
+            */
+
+            map01.MapObjectData = new int[,] {
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }
+            };
+
+            map01.TileList = new string[] {
+                " ",
+                " ".PastelBg("#C816CB"),
+                " ".PastelBg("#ECF100"),
+                "■".Pastel("#1BA833"),
+                "■".Pastel("#AAAE00"),
+                " ".PastelBg("#4296f5"),
+                " ".PastelBg("#81f542"),
+                " ".PastelBg("#e8a841"),
+                " ".PastelBg("#c73b2e"),
+                " ".PastelBg("#34f7ee"),
+                " ".PastelBg("#9521d9"),
+                "|".Pastel("#4296f5"),
+                "|".Pastel("#81f542"),
+                "|".Pastel("#e8a841")
+            };
+
+            map01.Position = new Vec2Int(0, 0);
             map01.RenderMap();
 
             //vv ERROR TEST vv
@@ -84,6 +149,7 @@ namespace Workspace
 
         public void Update() // Update is called every ~ 0.1 seconds
         {
+            /*
             if (!consoleActive && !isGameEnd)
             {
                 if (Input.KeyDown(ConsoleKey.RightArrow))
@@ -168,6 +234,7 @@ namespace Workspace
                 }
 
             }
+            */
 
         }
 
@@ -389,15 +456,15 @@ namespace Workspace
             playerPosY = KarmelCatalys.Program.screenHeight / 2;
             Console.SetCursorPosition(0, 0);
             
-            map01.RenderMap();
+            //map01.RenderMap();
             Console.SetCursorPosition(0, 0);
-            UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#16FF00", true);
-            Console.SetCursorPosition(KarmelCatalys.Program.screenWidth/4, 2);
-            Console.Write(("Level: " + currentLevel + "   |   Boxes in a row: " + boxesInRow).ToString().Pastel("#FFFFFF"));
+            //UI.DrawUIBox(new Vec2Int(KarmelCatalys.Program.screenWidth, 3), "#16FF00", true);
+            //Console.SetCursorPosition(KarmelCatalys.Program.screenWidth/4, 2);
+            //Console.Write(("Level: " + currentLevel + "   |   Boxes in a row: " + boxesInRow).ToString().Pastel("#FFFFFF"));
 
-            Console.SetCursorPosition(playerPosX, playerPosY);
-            Console.Write("@".Pastel("#00FF8D"));
-            Console.SetCursorPosition(0, 0);
+            //Console.SetCursorPosition(playerPosX, playerPosY);
+            //Console.Write("@".Pastel("#00FF8D"));
+            //Console.SetCursorPosition(0, 0);
 
         }
 
